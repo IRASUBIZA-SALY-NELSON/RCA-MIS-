@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom styles for responsive layout */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 240px !important;
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    width: 240px !important;
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+  }
+}
