@@ -352,503 +352,964 @@ const Student = () => {
     );
   };
 
-  // Dashboard Page
-  const DashboardPage = () => (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-      {/* Enhanced Header Section */}
+  // // Dashboard Page
+  // const DashboardPage = () => (
+  //   <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+  //     {/* Enhanced Header Section */}
+  //     <div style={{ 
+  //       marginBottom: '32px', 
+  //       flexShrink: 0,
+  //       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  //       borderRadius: '16px',
+  //       padding: '32px',
+  //       color: 'white',
+  //       position: 'relative',
+  //       overflow: 'hidden'
+  //     }}>
+  //       <div style={{ 
+  //         position: 'absolute', 
+  //         top: '-50%', 
+  //         right: '-20%', 
+  //         width: '200px', 
+  //         height: '200px', 
+  //         background: 'rgba(255,255,255,0.1)', 
+  //         borderRadius: '50%',
+  //         zIndex: 1
+  //       }}></div>
+  //       <div style={{ 
+  //         position: 'absolute', 
+  //         bottom: '-30%', 
+  //         left: '-10%', 
+  //         width: '150px', 
+  //         height: '150px', 
+  //         background: 'rgba(255,255,255,0.05)', 
+  //         borderRadius: '50%',
+  //         zIndex: 1
+  //       }}></div>
+  //       <div style={{ position: 'relative', zIndex: 2 }}>
+  //         <h1 style={{ 
+  //           fontSize: '32px', 
+  //           fontWeight: '800', 
+  //           marginBottom: '8px',
+  //           textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+  //         }}>
+  //           Welcome Back, Saly Nelson! 👋
+  //         </h1>
+  //         <p style={{ 
+  //           fontSize: '16px', 
+  //           opacity: 0.9,
+  //           marginBottom: '0',
+  //           fontWeight: '400'
+  //         }}>
+  //           Here's your academic performance overview and latest updates
+  //         </p>
+  //       </div>
+  //     </div>
+
+  //            <div style={{ 
+  //        display: 'grid', 
+  //        gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 2fr) minmax(0, 1fr)', 
+  //        gap: '24px', 
+  //        flex: '1',
+  //        minHeight: 0
+  //      }}>
+  //        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', minHeight: 0 }}>
+  //          {/* Enhanced Stats Cards */}
+  //          <div style={{ 
+  //            display: 'grid', 
+  //            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+  //            gap: '20px', 
+  //            flexShrink: 0 
+  //          }}>
+  //            <div style={{ 
+  //              backgroundColor: 'white', 
+  //              padding: '28px', 
+  //              borderRadius: '16px', 
+  //              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+  //              border: '1px solid rgba(34, 197, 94, 0.1)',
+  //              position: 'relative',
+  //              overflow: 'hidden'
+  //            }}>
+  //              <div style={{ 
+  //                position: 'absolute', 
+  //                top: '0', 
+  //                right: '0', 
+  //                width: '60px', 
+  //                height: '60px', 
+  //                background: 'linear-gradient(135deg, #22c55e, #16a34a)', 
+  //                borderRadius: '0 16px 0 60px',
+  //                opacity: 0.1
+  //              }}></div>
+  //              <div style={{ position: 'relative', zIndex: 2 }}>
+  //                <div style={{ 
+  //                  fontSize: '36px', 
+  //                  fontWeight: '800', 
+  //                  marginBottom: '8px', 
+  //                  color: '#22c55e',
+  //                  display: 'flex',
+  //                  alignItems: 'center',
+  //                  gap: '8px'
+  //                }}>
+  //                  89% 📈
+  //                </div>
+  //                <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Average Performance</div>
+  //                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>+5.2% from last term</div>
+  //              </div>
+  //            </div>
+             
+  //            <div style={{ 
+  //              backgroundColor: 'white', 
+  //              padding: '28px', 
+  //              borderRadius: '16px', 
+  //              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+  //              border: '1px solid rgba(59, 130, 246, 0.1)',
+  //              position: 'relative',
+  //              overflow: 'hidden'
+  //            }}>
+  //              <div style={{ 
+  //                position: 'absolute', 
+  //                top: '0', 
+  //                right: '0', 
+  //                width: '60px', 
+  //                height: '60px', 
+  //                background: 'linear-gradient(135deg, #3b82f6, #2563eb)', 
+  //                borderRadius: '0 16px 0 60px',
+  //                opacity: 0.1
+  //              }}></div>
+  //              <div style={{ position: 'relative', zIndex: 2 }}>
+  //                <div style={{ 
+  //                  fontSize: '36px', 
+  //                  fontWeight: '800', 
+  //                  marginBottom: '8px', 
+  //                  color: '#3b82f6',
+  //                  display: 'flex',
+  //                  alignItems: 'center',
+  //                  gap: '8px'
+  //                }}>
+  //                  Year 2C 🎓
+  //                </div>
+  //                <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Current Class</div>
+  //                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>Software Engineering</div>
+  //              </div>
+  //            </div>
+             
+  //            <div style={{ 
+  //              backgroundColor: 'white', 
+  //              padding: '28px', 
+  //              borderRadius: '16px', 
+  //              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+  //              border: '1px solid rgba(168, 85, 247, 0.1)',
+  //              position: 'relative',
+  //              overflow: 'hidden'
+  //            }}>
+  //              <div style={{ 
+  //                position: 'absolute', 
+  //                top: '0', 
+  //                right: '0', 
+  //                width: '60px', 
+  //                height: '60px', 
+  //                background: 'linear-gradient(135deg, #a855f7, #9333ea)', 
+  //                borderRadius: '0 16px 0 60px',
+  //                opacity: 0.1
+  //              }}></div>
+  //              <div style={{ position: 'relative', zIndex: 2 }}>
+  //                <div style={{ 
+  //                  fontSize: '36px', 
+  //                  fontWeight: '800', 
+  //                  marginBottom: '8px', 
+  //                  color: '#a855f7',
+  //                  display: 'flex',
+  //                  alignItems: 'center',
+  //                  gap: '8px'
+  //                }}>
+  //                  34 💡
+  //                </div>
+  //                <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Innovations</div>
+  //                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>+12 this semester</div>
+  //              </div>
+  //            </div>
+  //          </div>
+
+  //          <div style={{ 
+  //            backgroundColor: 'white', 
+  //            padding: '32px', 
+  //            borderRadius: '16px', 
+  //            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
+  //            flex: '1',
+  //            minHeight: '500px',
+  //            display: 'flex',
+  //            flexDirection: 'column',
+  //            border: '1px solid rgba(0, 0, 0, 0.05)'
+  //          }}>
+  //            <div style={{ 
+  //              display: 'flex', 
+  //              justifyContent: 'space-between', 
+  //              alignItems: 'center', 
+  //              marginBottom: '24px', 
+  //              flexShrink: 0 
+  //            }}>
+  //              <div>
+  //                <div style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
+  //                  📊 Performance Analytics
+  //                </div>
+  //                <div style={{ fontSize: '14px', color: '#6b7280' }}>
+  //                  Your academic progress over the last 8 months
+  //                </div>
+  //              </div>
+  //              <div style={{ 
+  //                backgroundColor: 'linear-gradient(135deg, #22c55e, #16a34a)', 
+  //                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+  //                color: 'white', 
+  //                padding: '12px 20px', 
+  //                borderRadius: '12px', 
+  //                fontSize: '16px', 
+  //                fontWeight: '700',
+  //                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+  //              }}>
+  //                Mid Term II: 88.4%
+  //              </div>
+  //            </div>
+  //            <div style={{ flex: '1', minHeight: '400px', position: 'relative' }}>
+  //              <PerformanceChart />
+  //            </div>
+  //          </div>
+
+  //          <div style={{ 
+  //            backgroundColor: 'white', 
+  //            borderRadius: '16px', 
+  //            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
+  //            overflow: 'hidden',
+  //            flex: '1',
+  //            minHeight: 0,
+  //            display: 'flex',
+  //            flexDirection: 'column',
+  //            border: '1px solid rgba(0, 0, 0, 0.05)'
+  //          }}>
+  //            <div style={{ 
+  //              padding: '24px 28px', 
+  //              borderBottom: '1px solid #e5e7eb', 
+  //              flexShrink: 0,
+  //              background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
+  //            }}>
+  //              <div style={{ 
+  //                display: 'flex', 
+  //                justifyContent: 'space-between', 
+  //                alignItems: 'center' 
+  //              }}>
+  //                <div>
+  //                  <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
+  //                    💡 Your Innovations Portfolio
+  //                  </div>
+  //                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
+  //                    Track your latest projects and their engagement
+  //                  </div>
+  //                </div>
+  //                <div style={{ 
+  //                  backgroundColor: '#3b82f6', 
+  //                  color: 'white', 
+  //                  padding: '8px 16px', 
+  //                  borderRadius: '20px', 
+  //                  fontSize: '14px', 
+  //                  fontWeight: '600',
+  //                  boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+  //                }}>
+  //                  {innovations.length} Projects
+  //                </div>
+  //              </div>
+  //            </div>
+  //            <div style={{ flex: '1', overflow: 'auto', minHeight: 0 }}>
+  //              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+  //                <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f8fafc', zIndex: 1 }}>
+  //                  <tr>
+  //                    <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>#</th>
+  //                    <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Project Name</th>
+  //                    <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Comments</th>
+  //                    <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Actions</th>
+  //                  </tr>
+  //                </thead>
+  //                <tbody>
+  //                  {innovations.map((innovation, index) => (
+  //                    <tr key={innovation.id} style={{ 
+  //                      transition: 'all 0.2s ease',
+  //                      ':hover': { backgroundColor: '#f8fafc' }
+  //                    }}>
+  //                      <td style={{ 
+  //                        padding: '16px 28px', 
+  //                        borderBottom: '1px solid #f1f5f9', 
+  //                        fontSize: '15px',
+  //                        fontWeight: '600',
+  //                        color: '#374151'
+  //                      }}>
+  //                        <div style={{ 
+  //                          width: '32px', 
+  //                          height: '32px', 
+  //                          borderRadius: '8px', 
+  //                          backgroundColor: '#3b82f6', 
+  //                          color: 'white', 
+  //                          display: 'flex', 
+  //                          alignItems: 'center', 
+  //                          justifyContent: 'center',
+  //                          fontSize: '14px',
+  //                          fontWeight: '700'
+  //                        }}>
+  //                          {index + 1}
+  //                        </div>
+  //                      </td>
+  //                      <td style={{ 
+  //                        padding: '16px 28px', 
+  //                        borderBottom: '1px solid #f1f5f9', 
+  //                        fontSize: '15px',
+  //                        fontWeight: '500',
+  //                        color: '#1f2937'
+  //                      }}>
+  //                        {innovation.name}
+  //                      </td>
+  //                      <td style={{ 
+  //                        padding: '16px 28px', 
+  //                        borderBottom: '1px solid #f1f5f9', 
+  //                        fontSize: '15px'
+  //                      }}>
+  //                        <span style={{ 
+  //                          backgroundColor: '#dbeafe', 
+  //                          color: '#1d4ed8', 
+  //                          padding: '6px 12px', 
+  //                          borderRadius: '20px', 
+  //                          fontSize: '13px', 
+  //                          fontWeight: '600' 
+  //                        }}>
+  //                          {innovation.comments} comments
+  //                        </span>
+  //                      </td>
+  //                      <td style={{ 
+  //                        padding: '16px 28px', 
+  //                        borderBottom: '1px solid #f1f5f9', 
+  //                        fontSize: '15px' 
+  //                      }}>
+  //                        <div style={{ display: 'flex', gap: '8px' }}>
+  //                          <button style={{ 
+  //                            width: '36px', 
+  //                            height: '36px', 
+  //                            borderRadius: '8px', 
+  //                            border: 'none', 
+  //                            cursor: 'pointer', 
+  //                            backgroundColor: '#dbeafe', 
+  //                            color: '#1d4ed8',
+  //                            display: 'flex',
+  //                            alignItems: 'center',
+  //                            justifyContent: 'center',
+  //                            fontSize: '16px',
+  //                            transition: 'all 0.2s ease',
+  //                            ':hover': { backgroundColor: '#bfdbfe' }
+  //                          }}>
+  //                            👁️
+  //                          </button>
+  //                          <button style={{ 
+  //                            width: '36px', 
+  //                            height: '36px', 
+  //                            borderRadius: '8px', 
+  //                            border: 'none', 
+  //                            cursor: 'pointer', 
+  //                            backgroundColor: '#fee2e2', 
+  //                            color: '#dc2626',
+  //                            display: 'flex',
+  //                            alignItems: 'center',
+  //                            justifyContent: 'center',
+  //                            fontSize: '16px',
+  //                            transition: 'all 0.2s ease',
+  //                            ':hover': { backgroundColor: '#fecaca' }
+  //                          }}>
+  //                            🗑️
+  //                          </button>
+  //                        </div>
+  //                      </td>
+  //                    </tr>
+  //                  ))}
+  //                </tbody>
+  //              </table>
+  //            </div>
+  //          </div>
+  //        </div>
+
+  //        {/* Fixed Announcements Section */}
+  //        <div style={{ 
+  //          backgroundColor: 'white', 
+  //          borderRadius: '16px', 
+  //          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
+  //          padding: '28px',
+  //          display: 'flex',
+  //          flexDirection: 'column',
+  //          height: 'fit-content',
+  //          maxHeight: '600px',
+  //          border: '1px solid rgba(0, 0, 0, 0.05)',
+  //          position: 'sticky',
+  //          top: '24px'
+  //        }}>
+  //          <div style={{ 
+  //            marginBottom: '24px', 
+  //            display: 'flex', 
+  //            justifyContent: 'space-between', 
+  //            alignItems: 'center', 
+  //            flexShrink: 0 
+  //          }}>
+  //            <div>
+  //              <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
+  //                📢 Latest Announcements
+  //              </div>
+  //              <div style={{ fontSize: '14px', color: '#6b7280' }}>
+  //                Stay updated with school news and events
+  //              </div>
+  //            </div>
+  //            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+  //              <span style={{ 
+  //                fontSize: '14px', 
+  //                backgroundColor: 'linear-gradient(135deg, #3b82f6, #2563eb)', 
+  //                background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+  //                color: 'white', 
+  //                padding: '6px 12px', 
+  //                borderRadius: '20px',
+  //                fontWeight: '600',
+  //                boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+  //              }}>
+  //                82 New
+  //              </span>
+  //              <button style={{ 
+  //                fontSize: '14px', 
+  //                color: '#7c3aed', 
+  //                background: 'none',
+  //                border: 'none',
+  //                cursor: 'pointer',
+  //                fontWeight: '600',
+  //                padding: '8px 12px',
+  //                borderRadius: '8px',
+  //                transition: 'all 0.2s ease',
+  //                ':hover': { backgroundColor: '#f3f4f6' }
+  //              }}>
+  //                View all →
+  //              </button>
+  //            </div>
+  //          </div>
+           
+  //          <div style={{ 
+  //            overflow: 'auto', 
+  //            maxHeight: '400px',
+  //            paddingRight: '8px'
+  //          }}>
+  //            {announcements.map((announcement) => (
+  //              <div key={announcement.id} style={{ 
+  //                padding: '20px 0', 
+  //                borderBottom: '1px solid #f1f5f9',
+  //                transition: 'all 0.2s ease',
+  //                cursor: 'pointer',
+  //                ':hover': { backgroundColor: '#f8fafc', paddingLeft: '12px', paddingRight: '12px', marginLeft: '-12px', marginRight: '-12px', borderRadius: '8px' }
+  //              }}>
+  //                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+  //                  <div style={{ 
+  //                    fontSize: '13px', 
+  //                    color: '#6b7280',
+  //                    backgroundColor: '#f3f4f6',
+  //                    padding: '4px 8px',
+  //                    borderRadius: '6px',
+  //                    fontWeight: '500'
+  //                  }}>
+  //                    📅 Tuesday 20th, 22
+  //                  </div>
+  //                  <div style={{ 
+  //                    fontSize: '12px', 
+  //                    color: '#9ca3af',
+  //                    backgroundColor: '#fef3c7',
+  //                    color: '#92400e',
+  //                    padding: '4px 8px',
+  //                    borderRadius: '6px',
+  //                    fontWeight: '500'
+  //                  }}>
+  //                    {announcement.date}
+  //                  </div>
+  //                </div>
+  //                <div style={{ 
+  //                  fontSize: '16px', 
+  //                  fontWeight: '700', 
+  //                  color: '#1f2937', 
+  //                  marginBottom: '8px',
+  //                  lineHeight: '1.3'
+  //                }}>
+  //                  {announcement.title}
+  //                </div>
+  //                <div style={{ 
+  //                  fontSize: '14px', 
+  //                  color: '#6b7280', 
+  //                  lineHeight: '1.5',
+  //                  fontWeight: '400'
+  //                }}>
+  //                  {announcement.description}
+  //                </div>
+  //              </div>
+  //            ))}
+  //          </div>
+  //        </div>
+  //      </div>
+  //   </div>
+  // );
+
+const DashboardPage = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  // Sample data matching your image
+  const latestMarks = [
+    { lesson: "Ikinyarwanda II", marks: 8.5, weight: 10, status: "PASS", comment: "EXAM" },
+    { lesson: "Ikinyarwanda II", marks: 10, weight: 10, status: "PASS", comment: "CAT" },
+    { lesson: "Entrepreneurship II", marks: 9.5, weight: 10, status: "PASS", comment: "EXAM" },
+    { lesson: "Entrepreneurship II", marks: 7.83, weight: 10, status: "PASS", comment: "CAT" },
+    { lesson: "Citizenship II", marks: 9, weight: 10, status: "PASS", comment: "EXAM" }
+  ];
+
+  return (
+    <div style={{ 
+      backgroundColor: '#f8fafc', 
+      minHeight: '100vh',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      padding: '24px'
+    }}>
+      {/* Header */}
       <div style={{ 
-        marginBottom: '32px', 
-        flexShrink: 0,
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        borderRadius: '16px',
-        padding: '32px',
-        color: 'white',
-        position: 'relative',
-        overflow: 'hidden'
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '32px'
       }}>
         <div style={{ 
-          position: 'absolute', 
-          top: '-50%', 
-          right: '-20%', 
-          width: '200px', 
-          height: '200px', 
-          background: 'rgba(255,255,255,0.1)', 
-          borderRadius: '50%',
-          zIndex: 1
-        }}></div>
-        <div style={{ 
-          position: 'absolute', 
-          bottom: '-30%', 
-          left: '-10%', 
-          width: '150px', 
-          height: '150px', 
-          background: 'rgba(255,255,255,0.05)', 
-          borderRadius: '50%',
-          zIndex: 1
-        }}></div>
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          <h1 style={{ 
-            fontSize: '32px', 
-            fontWeight: '800', 
-            marginBottom: '8px',
-            textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-          }}>
-            Welcome Back, Burigo Aldo Jabes! 👋
-          </h1>
-          <p style={{ 
-            fontSize: '16px', 
-            opacity: 0.9,
-            marginBottom: '0',
-            fontWeight: '400'
-          }}>
-            Here's your academic performance overview and latest updates
-          </p>
+          fontSize: '18px',
+          fontWeight: '400',
+          color: '#6b7280',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          Good Evening 👋 <span style={{ color: '#374151', fontWeight: '500' }}>IRASUBIZA872</span>
         </div>
       </div>
 
-             <div style={{ 
-         display: 'grid', 
-         gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 2fr) minmax(0, 1fr)', 
-         gap: '24px', 
-         flex: '1',
-         minHeight: 0
-       }}>
-         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', minHeight: 0 }}>
-           {/* Enhanced Stats Cards */}
-           <div style={{ 
-             display: 'grid', 
-             gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
-             gap: '20px', 
-             flexShrink: 0 
-           }}>
-             <div style={{ 
-               backgroundColor: 'white', 
-               padding: '28px', 
-               borderRadius: '16px', 
-               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-               border: '1px solid rgba(34, 197, 94, 0.1)',
-               position: 'relative',
-               overflow: 'hidden'
-             }}>
-               <div style={{ 
-                 position: 'absolute', 
-                 top: '0', 
-                 right: '0', 
-                 width: '60px', 
-                 height: '60px', 
-                 background: 'linear-gradient(135deg, #22c55e, #16a34a)', 
-                 borderRadius: '0 16px 0 60px',
-                 opacity: 0.1
-               }}></div>
-               <div style={{ position: 'relative', zIndex: 2 }}>
-                 <div style={{ 
-                   fontSize: '36px', 
-                   fontWeight: '800', 
-                   marginBottom: '8px', 
-                   color: '#22c55e',
-                   display: 'flex',
-                   alignItems: 'center',
-                   gap: '8px'
-                 }}>
-                   89% 📈
-                 </div>
-                 <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Average Performance</div>
-                 <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>+5.2% from last term</div>
-               </div>
-             </div>
-             
-             <div style={{ 
-               backgroundColor: 'white', 
-               padding: '28px', 
-               borderRadius: '16px', 
-               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-               border: '1px solid rgba(59, 130, 246, 0.1)',
-               position: 'relative',
-               overflow: 'hidden'
-             }}>
-               <div style={{ 
-                 position: 'absolute', 
-                 top: '0', 
-                 right: '0', 
-                 width: '60px', 
-                 height: '60px', 
-                 background: 'linear-gradient(135deg, #3b82f6, #2563eb)', 
-                 borderRadius: '0 16px 0 60px',
-                 opacity: 0.1
-               }}></div>
-               <div style={{ position: 'relative', zIndex: 2 }}>
-                 <div style={{ 
-                   fontSize: '36px', 
-                   fontWeight: '800', 
-                   marginBottom: '8px', 
-                   color: '#3b82f6',
-                   display: 'flex',
-                   alignItems: 'center',
-                   gap: '8px'
-                 }}>
-                   Year 2C 🎓
-                 </div>
-                 <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Current Class</div>
-                 <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>Software Engineering</div>
-               </div>
-             </div>
-             
-             <div style={{ 
-               backgroundColor: 'white', 
-               padding: '28px', 
-               borderRadius: '16px', 
-               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-               border: '1px solid rgba(168, 85, 247, 0.1)',
-               position: 'relative',
-               overflow: 'hidden'
-             }}>
-               <div style={{ 
-                 position: 'absolute', 
-                 top: '0', 
-                 right: '0', 
-                 width: '60px', 
-                 height: '60px', 
-                 background: 'linear-gradient(135deg, #a855f7, #9333ea)', 
-                 borderRadius: '0 16px 0 60px',
-                 opacity: 0.1
-               }}></div>
-               <div style={{ position: 'relative', zIndex: 2 }}>
-                 <div style={{ 
-                   fontSize: '36px', 
-                   fontWeight: '800', 
-                   marginBottom: '8px', 
-                   color: '#a855f7',
-                   display: 'flex',
-                   alignItems: 'center',
-                   gap: '8px'
-                 }}>
-                   34 💡
-                 </div>
-                 <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Innovations</div>
-                 <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>+12 this semester</div>
-               </div>
-             </div>
-           </div>
+      {/* Stats Cards */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)', 
+        gap: '16px', 
+        marginBottom: '32px' 
+      }}>
+        {/* Year 2C Card */}
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            fontWeight: '600', 
+            color: '#8b5cf6',
+            marginBottom: '8px',
+            letterSpacing: '-0.025em'
+          }}>
+            Year 2C
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
+            color: '#9ca3af',
+            fontWeight: '400'
+          }}>
+            Current Class
+          </div>
+        </div>
 
-           <div style={{ 
-             backgroundColor: 'white', 
-             padding: '32px', 
-             borderRadius: '16px', 
-             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
-             flex: '1',
-             minHeight: '500px',
-             display: 'flex',
-             flexDirection: 'column',
-             border: '1px solid rgba(0, 0, 0, 0.05)'
-           }}>
-             <div style={{ 
-               display: 'flex', 
-               justifyContent: 'space-between', 
-               alignItems: 'center', 
-               marginBottom: '24px', 
-               flexShrink: 0 
-             }}>
-               <div>
-                 <div style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
-                   📊 Performance Analytics
-                 </div>
-                 <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                   Your academic progress over the last 8 months
-                 </div>
-               </div>
-               <div style={{ 
-                 backgroundColor: 'linear-gradient(135deg, #22c55e, #16a34a)', 
-                 background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-                 color: 'white', 
-                 padding: '12px 20px', 
-                 borderRadius: '12px', 
-                 fontSize: '16px', 
-                 fontWeight: '700',
-                 boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
-               }}>
-                 Mid Term II: 88.4%
-               </div>
-             </div>
-             <div style={{ flex: '1', minHeight: '400px', position: 'relative' }}>
-               <PerformanceChart />
-             </div>
-           </div>
+        {/* 15 Courses Card */}
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            fontWeight: '600', 
+            color: '#8b5cf6',
+            marginBottom: '8px',
+            letterSpacing: '-0.025em'
+          }}>
+            15
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
+            color: '#9ca3af',
+            fontWeight: '400'
+          }}>
+            Courses
+          </div>
+        </div>
 
-           <div style={{ 
-             backgroundColor: 'white', 
-             borderRadius: '16px', 
-             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
-             overflow: 'hidden',
-             flex: '1',
-             minHeight: 0,
-             display: 'flex',
-             flexDirection: 'column',
-             border: '1px solid rgba(0, 0, 0, 0.05)'
-           }}>
-             <div style={{ 
-               padding: '24px 28px', 
-               borderBottom: '1px solid #e5e7eb', 
-               flexShrink: 0,
-               background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
-             }}>
-               <div style={{ 
-                 display: 'flex', 
-                 justifyContent: 'space-between', 
-                 alignItems: 'center' 
-               }}>
-                 <div>
-                   <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
-                     💡 Your Innovations Portfolio
-                   </div>
-                   <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                     Track your latest projects and their engagement
-                   </div>
-                 </div>
-                 <div style={{ 
-                   backgroundColor: '#3b82f6', 
-                   color: 'white', 
-                   padding: '8px 16px', 
-                   borderRadius: '20px', 
-                   fontSize: '14px', 
-                   fontWeight: '600',
-                   boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
-                 }}>
-                   {innovations.length} Projects
-                 </div>
-               </div>
-             </div>
-             <div style={{ flex: '1', overflow: 'auto', minHeight: 0 }}>
-               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                 <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f8fafc', zIndex: 1 }}>
-                   <tr>
-                     <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>#</th>
-                     <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Project Name</th>
-                     <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Comments</th>
-                     <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Actions</th>
-                   </tr>
-                 </thead>
-                 <tbody>
-                   {innovations.map((innovation, index) => (
-                     <tr key={innovation.id} style={{ 
-                       transition: 'all 0.2s ease',
-                       ':hover': { backgroundColor: '#f8fafc' }
-                     }}>
-                       <td style={{ 
-                         padding: '16px 28px', 
-                         borderBottom: '1px solid #f1f5f9', 
-                         fontSize: '15px',
-                         fontWeight: '600',
-                         color: '#374151'
-                       }}>
-                         <div style={{ 
-                           width: '32px', 
-                           height: '32px', 
-                           borderRadius: '8px', 
-                           backgroundColor: '#3b82f6', 
-                           color: 'white', 
-                           display: 'flex', 
-                           alignItems: 'center', 
-                           justifyContent: 'center',
-                           fontSize: '14px',
-                           fontWeight: '700'
-                         }}>
-                           {index + 1}
-                         </div>
-                       </td>
-                       <td style={{ 
-                         padding: '16px 28px', 
-                         borderBottom: '1px solid #f1f5f9', 
-                         fontSize: '15px',
-                         fontWeight: '500',
-                         color: '#1f2937'
-                       }}>
-                         {innovation.name}
-                       </td>
-                       <td style={{ 
-                         padding: '16px 28px', 
-                         borderBottom: '1px solid #f1f5f9', 
-                         fontSize: '15px'
-                       }}>
-                         <span style={{ 
-                           backgroundColor: '#dbeafe', 
-                           color: '#1d4ed8', 
-                           padding: '6px 12px', 
-                           borderRadius: '20px', 
-                           fontSize: '13px', 
-                           fontWeight: '600' 
-                         }}>
-                           {innovation.comments} comments
-                         </span>
-                       </td>
-                       <td style={{ 
-                         padding: '16px 28px', 
-                         borderBottom: '1px solid #f1f5f9', 
-                         fontSize: '15px' 
-                       }}>
-                         <div style={{ display: 'flex', gap: '8px' }}>
-                           <button style={{ 
-                             width: '36px', 
-                             height: '36px', 
-                             borderRadius: '8px', 
-                             border: 'none', 
-                             cursor: 'pointer', 
-                             backgroundColor: '#dbeafe', 
-                             color: '#1d4ed8',
-                             display: 'flex',
-                             alignItems: 'center',
-                             justifyContent: 'center',
-                             fontSize: '16px',
-                             transition: 'all 0.2s ease',
-                             ':hover': { backgroundColor: '#bfdbfe' }
-                           }}>
-                             👁️
-                           </button>
-                           <button style={{ 
-                             width: '36px', 
-                             height: '36px', 
-                             borderRadius: '8px', 
-                             border: 'none', 
-                             cursor: 'pointer', 
-                             backgroundColor: '#fee2e2', 
-                             color: '#dc2626',
-                             display: 'flex',
-                             alignItems: 'center',
-                             justifyContent: 'center',
-                             fontSize: '16px',
-                             transition: 'all 0.2s ease',
-                             ':hover': { backgroundColor: '#fecaca' }
-                           }}>
-                             🗑️
-                           </button>
-                         </div>
-                       </td>
-                     </tr>
-                   ))}
-                 </tbody>
-               </table>
-             </div>
-           </div>
-         </div>
+        {/* 0 Discipline Cases Card */}
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            fontWeight: '600', 
+            color: '#8b5cf6',
+            marginBottom: '8px',
+            letterSpacing: '-0.025em'
+          }}>
+            0
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
+            color: '#9ca3af',
+            fontWeight: '400'
+          }}>
+            Discipline Cases
+          </div>
+        </div>
 
-         {/* Fixed Announcements Section */}
-         <div style={{ 
-           backgroundColor: 'white', 
-           borderRadius: '16px', 
-           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
-           padding: '28px',
-           display: 'flex',
-           flexDirection: 'column',
-           height: 'fit-content',
-           maxHeight: '600px',
-           border: '1px solid rgba(0, 0, 0, 0.05)',
-           position: 'sticky',
-           top: '24px'
-         }}>
-           <div style={{ 
-             marginBottom: '24px', 
-             display: 'flex', 
-             justifyContent: 'space-between', 
-             alignItems: 'center', 
-             flexShrink: 0 
-           }}>
-             <div>
-               <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
-                 📢 Latest Announcements
-               </div>
-               <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                 Stay updated with school news and events
-               </div>
-             </div>
-             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-               <span style={{ 
-                 fontSize: '14px', 
-                 backgroundColor: 'linear-gradient(135deg, #3b82f6, #2563eb)', 
-                 background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
-                 color: 'white', 
-                 padding: '6px 12px', 
-                 borderRadius: '20px',
-                 fontWeight: '600',
-                 boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
-               }}>
-                 82 New
-               </span>
-               <button style={{ 
-                 fontSize: '14px', 
-                 color: '#7c3aed', 
-                 background: 'none',
-                 border: 'none',
-                 cursor: 'pointer',
-                 fontWeight: '600',
-                 padding: '8px 12px',
-                 borderRadius: '8px',
-                 transition: 'all 0.2s ease',
-                 ':hover': { backgroundColor: '#f3f4f6' }
-               }}>
-                 View all →
-               </button>
-             </div>
-           </div>
-           
-           <div style={{ 
-             overflow: 'auto', 
-             maxHeight: '400px',
-             paddingRight: '8px'
-           }}>
-             {announcements.map((announcement) => (
-               <div key={announcement.id} style={{ 
-                 padding: '20px 0', 
-                 borderBottom: '1px solid #f1f5f9',
-                 transition: 'all 0.2s ease',
-                 cursor: 'pointer',
-                 ':hover': { backgroundColor: '#f8fafc', paddingLeft: '12px', paddingRight: '12px', marginLeft: '-12px', marginRight: '-12px', borderRadius: '8px' }
-               }}>
-                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                   <div style={{ 
-                     fontSize: '13px', 
-                     color: '#6b7280',
-                     backgroundColor: '#f3f4f6',
-                     padding: '4px 8px',
-                     borderRadius: '6px',
-                     fontWeight: '500'
-                   }}>
-                     📅 Tuesday 20th, 22
-                   </div>
-                   <div style={{ 
-                     fontSize: '12px', 
-                     color: '#9ca3af',
-                     backgroundColor: '#fef3c7',
-                     color: '#92400e',
-                     padding: '4px 8px',
-                     borderRadius: '6px',
-                     fontWeight: '500'
-                   }}>
-                     {announcement.date}
-                   </div>
-                 </div>
-                 <div style={{ 
-                   fontSize: '16px', 
-                   fontWeight: '700', 
-                   color: '#1f2937', 
-                   marginBottom: '8px',
-                   lineHeight: '1.3'
-                 }}>
-                   {announcement.title}
-                 </div>
-                 <div style={{ 
-                   fontSize: '14px', 
-                   color: '#6b7280', 
-                   lineHeight: '1.5',
-                   fontWeight: '400'
-                 }}>
-                   {announcement.description}
-                 </div>
-               </div>
-             ))}
-           </div>
-         </div>
-       </div>
+        {/* 3 Appeals Card */}
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            fontWeight: '600', 
+            color: '#8b5cf6',
+            marginBottom: '8px',
+            letterSpacing: '-0.025em'
+          }}>
+            3
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
+            color: '#9ca3af',
+            fontWeight: '400'
+          }}>
+            Appeals
+          </div>
+        </div>
+
+        {/* 84.99% CGPA Card */}
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ 
+            fontSize: '32px', 
+            fontWeight: '600', 
+            color: '#8b5cf6',
+            marginBottom: '8px',
+            letterSpacing: '-0.025em'
+          }}>
+            84.99%
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
+            color: '#9ca3af',
+            fontWeight: '400'
+          }}>
+            CAT Overall (Previous Term)
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Grid */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', 
+        gap: '24px' 
+      }}>
+        {/* Left Column - Latest Marks */}
+        <div>
+          {/* Latest Marks Section */}
+          <div style={{ 
+            backgroundColor: 'white', 
+            borderRadius: '16px', 
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb',
+            marginBottom: '24px'
+          }}>
+            {/* Header */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              padding: '20px 24px',
+              borderBottom: '1px solid #e5e7eb'
+            }}>
+              <h3 style={{ 
+                fontSize: '18px', 
+                fontWeight: '500', 
+                color: '#374151',
+                margin: '0'
+              }}>
+                Latest Marks
+              </h3>
+              <button style={{
+                color: '#6366f1',
+                background: 'none',
+                border: 'none',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                textDecoration: 'none'
+              }}>
+                View more
+              </button>
+            </div>
+
+            {/* Table */}
+            <div style={{ overflow: 'auto' }}>
+              <table style={{ 
+                width: '100%', 
+                borderCollapse: 'collapse'
+              }}>
+                <thead>
+                  <tr style={{ backgroundColor: '#f9fafb' }}>
+                    <th style={{ 
+                      padding: '12px 24px', 
+                      textAlign: 'left', 
+                      fontSize: '12px', 
+                      fontWeight: '500', 
+                      color: '#6b7280',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      Lesson
+                    </th>
+                    <th style={{ 
+                      padding: '12px 24px', 
+                      textAlign: 'left', 
+                      fontSize: '12px', 
+                      fontWeight: '500', 
+                      color: '#6b7280',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      Marks
+                    </th>
+                    <th style={{ 
+                      padding: '12px 24px', 
+                      textAlign: 'left', 
+                      fontSize: '12px', 
+                      fontWeight: '500', 
+                      color: '#6b7280',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      Weight
+                    </th>
+                    <th style={{ 
+                      padding: '12px 24px', 
+                      textAlign: 'left', 
+                      fontSize: '12px', 
+                      fontWeight: '500', 
+                      color: '#6b7280',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      Status
+                    </th>
+                    <th style={{ 
+                      padding: '12px 24px', 
+                      textAlign: 'left', 
+                      fontSize: '12px', 
+                      fontWeight: '500', 
+                      color: '#6b7280',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      Comment
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {latestMarks.map((mark, index) => (
+                    <tr key={index} style={{ 
+                      borderBottom: index < latestMarks.length - 1 ? '1px solid #f3f4f6' : 'none' 
+                    }}>
+                      <td style={{ 
+                        padding: '16px 24px', 
+                        fontSize: '14px',
+                        color: '#374151',
+                        fontWeight: '400'
+                      }}>
+                        {mark.lesson}
+                      </td>
+                      <td style={{ 
+                        padding: '16px 24px', 
+                        fontSize: '14px',
+                        color: '#374151',
+                        fontWeight: '500'
+                      }}>
+                        {mark.marks}
+                      </td>
+                      <td style={{ 
+                        padding: '16px 24px', 
+                        fontSize: '14px',
+                        color: '#6b7280'
+                      }}>
+                        {mark.weight}
+                      </td>
+                      <td style={{ 
+                        padding: '16px 24px', 
+                        fontSize: '14px',
+                        color: '#059669',
+                        fontWeight: '500'
+                      }}>
+                        {mark.status}
+                      </td>
+                      <td style={{ 
+                        padding: '16px 24px', 
+                        fontSize: '14px',
+                        color: '#6b7280'
+                      }}>
+                        {mark.comment}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Discipline Cases Section */}
+          <div style={{ 
+            backgroundColor: 'white', 
+            borderRadius: '16px', 
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb'
+          }}>
+            {/* Header */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              padding: '20px 24px',
+              borderBottom: '1px solid #e5e7eb'
+            }}>
+              <h3 style={{ 
+                fontSize: '18px', 
+                fontWeight: '500', 
+                color: '#374151',
+                margin: '0'
+              }}>
+                Discipline Cases
+              </h3>
+              <button style={{
+                color: '#6366f1',
+                background: 'none',
+                border: 'none',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                textDecoration: 'none'
+              }}>
+                View more
+              </button>
+            </div>
+
+            {/* Empty State */}
+            <div style={{ 
+              padding: '80px 24px',
+              textAlign: 'center',
+              color: '#6b7280'
+            }}>
+              <div style={{ 
+                fontSize: '16px', 
+                fontWeight: '500' 
+              }}>
+                No Discipline Cases So Far
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Announcements */}
+        <div style={{ 
+          backgroundColor: 'white', 
+          borderRadius: '16px', 
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb',
+          height: 'fit-content'
+        }}>
+          {/* Header */}
+          <div style={{ 
+            padding: '20px 24px',
+            borderBottom: '1px solid #e5e7eb',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ 
+              fontSize: '18px', 
+              fontWeight: '500', 
+              color: '#374151',
+              margin: '0 0 16px 0'
+            }}>
+              Announcements
+            </h3>
+            
+            {/* Illustration */}
+            <div style={{ 
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: '16px'
+            }}>
+              <div style={{
+                width: '120px',
+                height: '120px',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                borderRadius: '60px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '48px'
+              }}>
+                👩‍💼
+              </div>
+            </div>
+
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#6b7280',
+              lineHeight: '1.5',
+              textAlign: 'center'
+            }}>
+              The Announcements feature is under development. Thank you for your patience!
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
+};
 
   // Report Cards Page
   const ReportCardsPage = () => (
