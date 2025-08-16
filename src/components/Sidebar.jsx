@@ -112,10 +112,19 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
   };
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
-    { id: 'report-cards', label: 'Report-cards', icon: '📋' },
-    { id: 'projects', label: 'Projects', icon: '⚙️' },
-    { id: 'opportunities', label: 'Opportunities', icon: '∞' },
+    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { id: 'students', label: 'Students', icon: '👥' },
+    { id: 'marks', label: 'Marks', icon: '📝' },
+    { id: 'report-cards', label: 'Report Cards', icon: '📋' },
+    { id: 'projects', label: 'Projects', icon: '💡' },
+    { id: 'opportunities', label: 'Opportunities', icon: '🎯' },
+    { id: 'attendance', label: 'Attendance', icon: '✅' },
+    { id: 'assignments', label: 'Assignments', icon: '📚' },
+    { id: 'exams', label: 'Exams', icon: '📝' },
+    { id: 'timetable', label: 'Timetable', icon: '⏰' },
+    { id: 'communications', label: 'Communications', icon: '💬' },
+    { id: 'analytics', label: 'Analytics', icon: '📈' },
+    { id: 'settings', label: 'Settings', icon: '⚙️' },
     { id: 'profile', label: 'Profile', icon: '👤' }
   ];
 

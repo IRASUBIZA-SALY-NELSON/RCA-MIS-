@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -15,8 +17,23 @@ const Login = () => {
 
   const handleLogin = () => {
     if (staticUsers[email] && staticUsers[email].password === password) {
-      alert(`Login successful! Welcome ${staticUsers[email].role}`);
-      // Here you would typically redirect or update app state
+      const role = staticUsers[email].role;
+      alert(`Login successful! Welcome ${role}`);
+      
+      // Navigate based on role
+      switch (role) {
+        case 'student':
+          navigate('/student');
+          break;
+        case 'teacher':
+          navigate('/teacher');
+          break;
+        case 'admin':
+          navigate('/admin');
+          break;
+        default:
+          navigate('/student');
+      }
     } else {
       alert('Invalid email or password');
     }
