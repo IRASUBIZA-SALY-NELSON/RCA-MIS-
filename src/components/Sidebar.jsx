@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
 const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
+  // Check if we're on mobile
+  const isMobile = window.innerWidth <= 768;
+  
   const sidebarStyle = {
     width: '240px',
     backgroundColor: '#f8fafc',
@@ -8,7 +11,7 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
     padding: '0',
     position: 'fixed',
     height: '100vh',
-    left: isOpen ? '0' : '-240px',
+    left: isMobile ? (isOpen ? '0' : '-240px') : '0',
     top: '0',
     zIndex: 50,
     transition: 'left 0.3s ease',
