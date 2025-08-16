@@ -11,7 +11,7 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
     padding: '0',
     position: 'fixed',
     height: '100vh',
-    left: isMobile ? (isOpen ? '0' : '-240px') : '0',
+    left: isMobile ? (isOpen ? '0' : '-240px') : (isOpen ? '0' : '-240px'),
     top: '0',
     zIndex: 50,
     transition: 'left 0.3s ease',
@@ -21,9 +21,30 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
   const logoStyle = {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
     padding: '24px 20px',
     borderBottom: '1px solid #e2e8f0',
     backgroundColor: 'white'
+  };
+
+  const logoContentStyle = {
+    display: 'flex',
+    alignItems: 'center'
+  };
+
+  const toggleButtonStyle = {
+    width: '32px',
+    height: '32px',
+    borderRadius: '6px',
+    border: '1px solid #e2e8f0',
+    backgroundColor: 'white',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '16px',
+    color: '#4a5568',
+    transition: 'all 0.2s'
   };
 
   const logoIconStyle = {
@@ -119,12 +140,21 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
       
       <div style={sidebarStyle}>
         <div style={logoStyle}>
-          <div style={logoIconStyle}>{'</>'}</div>
-          <span style={logoTextStyle}>
-            Rwanda<br />
-            Coding<br />
-            Academy
-          </span>
+          <div style={logoContentStyle}>
+            <div style={logoIconStyle}>{'</>'}</div>
+            <span style={logoTextStyle}>
+              Rwanda<br />
+              Coding<br />
+              Academy
+            </span>
+          </div>
+          <button 
+            style={toggleButtonStyle}
+            onClick={toggleSidebar}
+            title="Toggle Sidebar"
+          >
+            {isOpen ? '◀' : '▶'}
+          </button>
         </div>
         
         <div style={menuStyle}>

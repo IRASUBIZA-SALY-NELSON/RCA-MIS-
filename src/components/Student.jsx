@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
+import ReportCard from './ReportCard';
 
 const Student = () => {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -12,11 +13,10 @@ const Student = () => {
     const checkScreenSize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
-      if (!mobile) {
-        setSidebarOpen(true); // Always open on desktop
-      } else {
+      if (mobile) {
         setSidebarOpen(false); // Closed by default on mobile
       }
+      // On desktop, keep the current state (don't force it to always be open)
     };
 
     checkScreenSize();
@@ -138,12 +138,12 @@ const Student = () => {
 
   // Report card data
   const reportData = {
-    student: "Burigo Aldo Jabes",
-    faculty: "Faustine Rugema",
+    student: "Saly Nelson",
+    faculty: "Shema Samuel",
     class: "Year One - Term II",
     school: "Beacon Coding Academy, NY, United States",
     grade: "8th Grade",
-    teacher: "Anne",
+    teacher: "Eddy",
     term: "Academic Year 2H - 2P ( Y-1 )",
     attendance: [
       { type: "Present", qtr1: 1, qtr2: 2, qtr3: 3, qtr4: 4, total: 10 },
@@ -188,14 +188,15 @@ const Student = () => {
   };
 
   const mainContentStyle = {
-    marginLeft: isMobile ? '0' : '240px',
+    marginLeft: isMobile ? '0' : (sidebarOpen ? '240px' : '0'),
     flex: '1',
     padding: '0',
     display: 'flex',
     flexDirection: 'column',
     height: '100vh',
     overflow: 'hidden',
-    transition: 'margin-left 0.3s ease'
+    transition: 'margin-left 0.3s ease',
+    position: 'relative'
   };
 
   const headerStyle = {
@@ -279,24 +280,24 @@ const Student = () => {
   const PerformanceChart = () => {
     const chartData = [
       { x: 0, y: 60 },
-      { x: 50, y: 80 },
-      { x: 100, y: 70 },
-      { x: 150, y: 90 },
-      { x: 200, y: 85 },
-      { x: 250, y: 95 },
-      { x: 300, y: 88 },
-      { x: 350, y: 92 }
+      { x: 100, y: 80 },
+      { x: 200, y: 70 },
+      { x: 300, y: 90 },
+      { x: 400, y: 85 },
+      { x: 500, y: 95 },
+      { x: 600, y: 88 },
+      { x: 700, y: 92 }
     ];
 
     const pathData = chartData.map((point, index) => 
-      `${index === 0 ? 'M' : 'L'} ${point.x} ${120 - point.y}`
+      `${index === 0 ? 'M' : 'L'} ${point.x} ${200 - point.y}`
     ).join(' ');
 
-    const areaPath = `${pathData} L 350 120 L 0 120 Z`;
+    const areaPath = `${pathData} L 700 200 L 0 200 Z`;
 
     return (
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <svg width="100%" height="100%" viewBox="0 0 350 200" preserveAspectRatio="xMidYMid meet" style={{ maxHeight: '200px' }}>
+        <svg width="100%" height="100%" viewBox="0 0 700 300" preserveAspectRatio="xMidYMid meet" style={{ maxHeight: '400px' }}>
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#4ade80" stopOpacity="0.3" />
@@ -304,30 +305,48 @@ const Student = () => {
             </linearGradient>
           </defs>
           
-          <g stroke="#e2e8f0" strokeWidth="1">
-            <line x1="0" y1="30" x2="350" y2="30" />
-            <line x1="0" y1="60" x2="350" y2="60" />
-            <line x1="0" y1="90" x2="350" y2="90" />
-            <line x1="0" y1="120" x2="350" y2="120" />
+          {/* Grid lines */}
+          <g stroke="#e2e8f0" strokeWidth="2">
+            <line x1="0" y1="50" x2="700" y2="50" />
+            <line x1="0" y1="100" x2="700" y2="100" />
+            <line x1="0" y1="150" x2="700" y2="150" />
+            <line x1="0" y1="200" x2="700" y2="200" />
           </g>
           
-          <path d={areaPath} fill="url(#gradient)" />
-          <path d={pathData} stroke="#4ade80" strokeWidth="2" fill="none" />
+          {/* Y-axis labels */}
+          <text x="720" y="55" fontSize="16" fill="#374151" textAnchor="start" fontWeight="600">90%</text>
+          <text x="720" y="105" fontSize="16" fill="#374151" textAnchor="start" fontWeight="600">75%</text>
+          <text x="720" y="155" fontSize="16" fill="#374151" textAnchor="start" fontWeight="600">60%</text>
+          <text x="720" y="205" fontSize="16" fill="#374151" textAnchor="start" fontWeight="600">45%</text>
           
+          {/* Area fill */}
+          <path d={areaPath} fill="url(#gradient)" />
+          
+          {/* Line */}
+          <path d={pathData} stroke="#4ade80" strokeWidth="4" fill="none" />
+          
+          {/* Data points */}
           {chartData.map((point, index) => (
             <circle
               key={index}
               cx={point.x}
-              cy={120 - point.y}
-              r="3"
+              cy={200 - point.y}
+              r="8"
               fill="#4ade80"
+              stroke="white"
+              strokeWidth="3"
             />
           ))}
           
-          <text x="20" y="140" fontSize="10" fill="#718096">January</text>
-          <text x="100" y="140" fontSize="10" fill="#718096">February</text>
-          <text x="200" y="140" fontSize="10" fill="#718096">March</text>
-          <text x="300" y="140" fontSize="10" fill="#718096">April</text>
+          {/* X-axis labels */}
+          <text x="0" y="230" fontSize="16" fill="#374151" textAnchor="middle" fontWeight="600">Jan</text>
+          <text x="100" y="230" fontSize="16" fill="#374151" textAnchor="middle" fontWeight="600">Feb</text>
+          <text x="200" y="230" fontSize="16" fill="#374151" textAnchor="middle" fontWeight="600">Mar</text>
+          <text x="300" y="230" fontSize="16" fill="#374151" textAnchor="middle" fontWeight="600">Apr</text>
+          <text x="400" y="230" fontSize="16" fill="#374151" textAnchor="middle" fontWeight="600">May</text>
+          <text x="500" y="230" fontSize="16" fill="#374151" textAnchor="middle" fontWeight="600">Jun</text>
+          <text x="600" y="230" fontSize="16" fill="#374151" textAnchor="middle" fontWeight="600">Jul</text>
+          <text x="700" y="230" fontSize="16" fill="#374151" textAnchor="middle" fontWeight="600">Aug</text>
         </svg>
       </div>
     );
@@ -335,135 +354,499 @@ const Student = () => {
 
   // Dashboard Page
   const DashboardPage = () => (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ marginBottom: '24px', flexShrink: 0 }}>
-        <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
-          Welcome Back Burigo Aldo Jabes
-        </h1>
-        <p style={{ fontSize: '14px', color: '#718096' }}>
-          Statistics of your performance and innovations published
-        </p>
-      </div>
-
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+      {/* Enhanced Header Section */}
       <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 2fr) minmax(0, 1fr)', 
-        gap: '24px', 
-        flex: '1',
-        minHeight: 0,
+        marginBottom: '32px', 
+        flexShrink: 0,
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        borderRadius: '16px',
+        padding: '32px',
+        color: 'white',
+        position: 'relative',
         overflow: 'hidden'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', minHeight: 0, overflow: 'hidden' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px', flexShrink: 0 }}>
-            <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-              <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px', color: '#22c55e' }}>89 %</div>
-              <div style={{ fontSize: '14px', color: '#718096' }}>Average Performance</div>
-            </div>
-            <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-              <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px', color: '#3b82f6' }}>34</div>
-              <div style={{ fontSize: '14px', color: '#718096' }}>Number of Innovations</div>
-            </div>
-          </div>
-
-          <div style={{ 
-            backgroundColor: 'white', 
-            padding: '24px', 
-            borderRadius: '12px', 
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', 
-            flex: '1',
-            minHeight: 0,
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <div style={{ fontSize: '16px', fontWeight: '600', color: '#1a202c', marginBottom: '20px', flexShrink: 0 }}>Performance Graph</div>
-            <div style={{ flex: '1', minHeight: 0, position: 'relative' }}>
-              <PerformanceChart />
-              <div style={{ position: 'absolute', top: '20px', right: '20px', backgroundColor: '#22c55e', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '600' }}>
-                Mid Term II 88.4%
-              </div>
-            </div>
-          </div>
-
-          <div style={{ 
-            backgroundColor: 'white', 
-            borderRadius: '12px', 
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', 
-            overflow: 'hidden',
-            flex: '1',
-            minHeight: 0,
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <div style={{ padding: '20px 24px', borderBottom: '1px solid #e2e8f0', flexShrink: 0 }}>
-              <div style={{ fontSize: '16px', fontWeight: '600', color: '#1a202c' }}>Information about your Innovations</div>
-            </div>
-            <div style={{ flex: '1', overflow: 'auto', minHeight: 0 }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead style={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1 }}>
-                  <tr>
-                    <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f7fafc' }}>#</th>
-                    <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f7fafc' }}>Project Name</th>
-                    <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f7fafc' }}>Number of Comments</th>
-                    <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f7fafc' }}>View</th>
-                    <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#718096', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f7fafc' }}>Remove</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {innovations.map((innovation, index) => (
-                    <tr key={innovation.id}>
-                      <td style={{ padding: '12px 24px', borderBottom: '1px solid #e2e8f0', fontSize: '14px' }}>{index + 1}</td>
-                      <td style={{ padding: '12px 24px', borderBottom: '1px solid #e2e8f0', fontSize: '14px' }}>{innovation.name}</td>
-                      <td style={{ padding: '12px 24px', borderBottom: '1px solid #e2e8f0', fontSize: '14px' }}>{innovation.comments}</td>
-                      <td style={{ padding: '12px 24px', borderBottom: '1px solid #e2e8f0', fontSize: '14px' }}>
-                        <button style={{ width: '24px', height: '24px', borderRadius: '4px', border: 'none', cursor: 'pointer', marginRight: '8px', backgroundColor: '#e6f3ff', color: '#0066cc' }}>
-                          👁️
-                        </button>
-                      </td>
-                      <td style={{ padding: '12px 24px', borderBottom: '1px solid #e2e8f0', fontSize: '14px' }}>
-                        <button style={{ width: '24px', height: '24px', borderRadius: '4px', border: 'none', cursor: 'pointer', marginRight: '8px', backgroundColor: '#ffeef0', color: '#e53e3e' }}>
-                          🗑️
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
         <div style={{ 
-          backgroundColor: 'white', 
-          borderRadius: '12px', 
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', 
-          padding: '24px',
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: 0,
-          overflow: 'hidden'
-        }}>
-          <div style={{ fontSize: '16px', fontWeight: '600', color: '#1a202c', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-            <span>Announcements</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '12px', backgroundColor: '#3b82f6', color: 'white', padding: '2px 6px', borderRadius: '10px' }}>82</span>
-              <span style={{ fontSize: '14px', color: '#7c3aed' }}>View all</span>
-            </div>
-          </div>
-          
-          <div style={{ flex: '1', overflow: 'auto', minHeight: 0 }}>
-            {announcements.map((announcement) => (
-              <div key={announcement.id} style={{ padding: '16px 0', borderBottom: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '12px', color: '#718096' }}>Tuesday 20th, 22</div>
-                  <div style={{ fontSize: '12px', color: '#718096' }}>{announcement.date}</div>
-                </div>
-                <div style={{ fontSize: '14px', fontWeight: '600', color: '#1a202c', marginBottom: '4px' }}>{announcement.title}</div>
-                <div style={{ fontSize: '12px', color: '#718096', lineHeight: '1.4' }}>{announcement.description}</div>
-              </div>
-            ))}
-          </div>
+          position: 'absolute', 
+          top: '-50%', 
+          right: '-20%', 
+          width: '200px', 
+          height: '200px', 
+          background: 'rgba(255,255,255,0.1)', 
+          borderRadius: '50%',
+          zIndex: 1
+        }}></div>
+        <div style={{ 
+          position: 'absolute', 
+          bottom: '-30%', 
+          left: '-10%', 
+          width: '150px', 
+          height: '150px', 
+          background: 'rgba(255,255,255,0.05)', 
+          borderRadius: '50%',
+          zIndex: 1
+        }}></div>
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <h1 style={{ 
+            fontSize: '32px', 
+            fontWeight: '800', 
+            marginBottom: '8px',
+            textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}>
+            Welcome Back, Burigo Aldo Jabes! 👋
+          </h1>
+          <p style={{ 
+            fontSize: '16px', 
+            opacity: 0.9,
+            marginBottom: '0',
+            fontWeight: '400'
+          }}>
+            Here's your academic performance overview and latest updates
+          </p>
         </div>
       </div>
+
+             <div style={{ 
+         display: 'grid', 
+         gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 2fr) minmax(0, 1fr)', 
+         gap: '24px', 
+         flex: '1',
+         minHeight: 0
+       }}>
+         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', minHeight: 0 }}>
+           {/* Enhanced Stats Cards */}
+           <div style={{ 
+             display: 'grid', 
+             gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+             gap: '20px', 
+             flexShrink: 0 
+           }}>
+             <div style={{ 
+               backgroundColor: 'white', 
+               padding: '28px', 
+               borderRadius: '16px', 
+               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+               border: '1px solid rgba(34, 197, 94, 0.1)',
+               position: 'relative',
+               overflow: 'hidden'
+             }}>
+               <div style={{ 
+                 position: 'absolute', 
+                 top: '0', 
+                 right: '0', 
+                 width: '60px', 
+                 height: '60px', 
+                 background: 'linear-gradient(135deg, #22c55e, #16a34a)', 
+                 borderRadius: '0 16px 0 60px',
+                 opacity: 0.1
+               }}></div>
+               <div style={{ position: 'relative', zIndex: 2 }}>
+                 <div style={{ 
+                   fontSize: '36px', 
+                   fontWeight: '800', 
+                   marginBottom: '8px', 
+                   color: '#22c55e',
+                   display: 'flex',
+                   alignItems: 'center',
+                   gap: '8px'
+                 }}>
+                   89% 📈
+                 </div>
+                 <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Average Performance</div>
+                 <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>+5.2% from last term</div>
+               </div>
+             </div>
+             
+             <div style={{ 
+               backgroundColor: 'white', 
+               padding: '28px', 
+               borderRadius: '16px', 
+               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+               border: '1px solid rgba(59, 130, 246, 0.1)',
+               position: 'relative',
+               overflow: 'hidden'
+             }}>
+               <div style={{ 
+                 position: 'absolute', 
+                 top: '0', 
+                 right: '0', 
+                 width: '60px', 
+                 height: '60px', 
+                 background: 'linear-gradient(135deg, #3b82f6, #2563eb)', 
+                 borderRadius: '0 16px 0 60px',
+                 opacity: 0.1
+               }}></div>
+               <div style={{ position: 'relative', zIndex: 2 }}>
+                 <div style={{ 
+                   fontSize: '36px', 
+                   fontWeight: '800', 
+                   marginBottom: '8px', 
+                   color: '#3b82f6',
+                   display: 'flex',
+                   alignItems: 'center',
+                   gap: '8px'
+                 }}>
+                   Year 2C 🎓
+                 </div>
+                 <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Current Class</div>
+                 <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>Software Engineering</div>
+               </div>
+             </div>
+             
+             <div style={{ 
+               backgroundColor: 'white', 
+               padding: '28px', 
+               borderRadius: '16px', 
+               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+               border: '1px solid rgba(168, 85, 247, 0.1)',
+               position: 'relative',
+               overflow: 'hidden'
+             }}>
+               <div style={{ 
+                 position: 'absolute', 
+                 top: '0', 
+                 right: '0', 
+                 width: '60px', 
+                 height: '60px', 
+                 background: 'linear-gradient(135deg, #a855f7, #9333ea)', 
+                 borderRadius: '0 16px 0 60px',
+                 opacity: 0.1
+               }}></div>
+               <div style={{ position: 'relative', zIndex: 2 }}>
+                 <div style={{ 
+                   fontSize: '36px', 
+                   fontWeight: '800', 
+                   marginBottom: '8px', 
+                   color: '#a855f7',
+                   display: 'flex',
+                   alignItems: 'center',
+                   gap: '8px'
+                 }}>
+                   34 💡
+                 </div>
+                 <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Innovations</div>
+                 <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>+12 this semester</div>
+               </div>
+             </div>
+           </div>
+
+           <div style={{ 
+             backgroundColor: 'white', 
+             padding: '32px', 
+             borderRadius: '16px', 
+             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
+             flex: '1',
+             minHeight: '500px',
+             display: 'flex',
+             flexDirection: 'column',
+             border: '1px solid rgba(0, 0, 0, 0.05)'
+           }}>
+             <div style={{ 
+               display: 'flex', 
+               justifyContent: 'space-between', 
+               alignItems: 'center', 
+               marginBottom: '24px', 
+               flexShrink: 0 
+             }}>
+               <div>
+                 <div style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
+                   📊 Performance Analytics
+                 </div>
+                 <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                   Your academic progress over the last 8 months
+                 </div>
+               </div>
+               <div style={{ 
+                 backgroundColor: 'linear-gradient(135deg, #22c55e, #16a34a)', 
+                 background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                 color: 'white', 
+                 padding: '12px 20px', 
+                 borderRadius: '12px', 
+                 fontSize: '16px', 
+                 fontWeight: '700',
+                 boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+               }}>
+                 Mid Term II: 88.4%
+               </div>
+             </div>
+             <div style={{ flex: '1', minHeight: '400px', position: 'relative' }}>
+               <PerformanceChart />
+             </div>
+           </div>
+
+           <div style={{ 
+             backgroundColor: 'white', 
+             borderRadius: '16px', 
+             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
+             overflow: 'hidden',
+             flex: '1',
+             minHeight: 0,
+             display: 'flex',
+             flexDirection: 'column',
+             border: '1px solid rgba(0, 0, 0, 0.05)'
+           }}>
+             <div style={{ 
+               padding: '24px 28px', 
+               borderBottom: '1px solid #e5e7eb', 
+               flexShrink: 0,
+               background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
+             }}>
+               <div style={{ 
+                 display: 'flex', 
+                 justifyContent: 'space-between', 
+                 alignItems: 'center' 
+               }}>
+                 <div>
+                   <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
+                     💡 Your Innovations Portfolio
+                   </div>
+                   <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                     Track your latest projects and their engagement
+                   </div>
+                 </div>
+                 <div style={{ 
+                   backgroundColor: '#3b82f6', 
+                   color: 'white', 
+                   padding: '8px 16px', 
+                   borderRadius: '20px', 
+                   fontSize: '14px', 
+                   fontWeight: '600',
+                   boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+                 }}>
+                   {innovations.length} Projects
+                 </div>
+               </div>
+             </div>
+             <div style={{ flex: '1', overflow: 'auto', minHeight: 0 }}>
+               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                 <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f8fafc', zIndex: 1 }}>
+                   <tr>
+                     <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>#</th>
+                     <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Project Name</th>
+                     <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Comments</th>
+                     <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Actions</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   {innovations.map((innovation, index) => (
+                     <tr key={innovation.id} style={{ 
+                       transition: 'all 0.2s ease',
+                       ':hover': { backgroundColor: '#f8fafc' }
+                     }}>
+                       <td style={{ 
+                         padding: '16px 28px', 
+                         borderBottom: '1px solid #f1f5f9', 
+                         fontSize: '15px',
+                         fontWeight: '600',
+                         color: '#374151'
+                       }}>
+                         <div style={{ 
+                           width: '32px', 
+                           height: '32px', 
+                           borderRadius: '8px', 
+                           backgroundColor: '#3b82f6', 
+                           color: 'white', 
+                           display: 'flex', 
+                           alignItems: 'center', 
+                           justifyContent: 'center',
+                           fontSize: '14px',
+                           fontWeight: '700'
+                         }}>
+                           {index + 1}
+                         </div>
+                       </td>
+                       <td style={{ 
+                         padding: '16px 28px', 
+                         borderBottom: '1px solid #f1f5f9', 
+                         fontSize: '15px',
+                         fontWeight: '500',
+                         color: '#1f2937'
+                       }}>
+                         {innovation.name}
+                       </td>
+                       <td style={{ 
+                         padding: '16px 28px', 
+                         borderBottom: '1px solid #f1f5f9', 
+                         fontSize: '15px'
+                       }}>
+                         <span style={{ 
+                           backgroundColor: '#dbeafe', 
+                           color: '#1d4ed8', 
+                           padding: '6px 12px', 
+                           borderRadius: '20px', 
+                           fontSize: '13px', 
+                           fontWeight: '600' 
+                         }}>
+                           {innovation.comments} comments
+                         </span>
+                       </td>
+                       <td style={{ 
+                         padding: '16px 28px', 
+                         borderBottom: '1px solid #f1f5f9', 
+                         fontSize: '15px' 
+                       }}>
+                         <div style={{ display: 'flex', gap: '8px' }}>
+                           <button style={{ 
+                             width: '36px', 
+                             height: '36px', 
+                             borderRadius: '8px', 
+                             border: 'none', 
+                             cursor: 'pointer', 
+                             backgroundColor: '#dbeafe', 
+                             color: '#1d4ed8',
+                             display: 'flex',
+                             alignItems: 'center',
+                             justifyContent: 'center',
+                             fontSize: '16px',
+                             transition: 'all 0.2s ease',
+                             ':hover': { backgroundColor: '#bfdbfe' }
+                           }}>
+                             👁️
+                           </button>
+                           <button style={{ 
+                             width: '36px', 
+                             height: '36px', 
+                             borderRadius: '8px', 
+                             border: 'none', 
+                             cursor: 'pointer', 
+                             backgroundColor: '#fee2e2', 
+                             color: '#dc2626',
+                             display: 'flex',
+                             alignItems: 'center',
+                             justifyContent: 'center',
+                             fontSize: '16px',
+                             transition: 'all 0.2s ease',
+                             ':hover': { backgroundColor: '#fecaca' }
+                           }}>
+                             🗑️
+                           </button>
+                         </div>
+                       </td>
+                     </tr>
+                   ))}
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+
+         {/* Fixed Announcements Section */}
+         <div style={{ 
+           backgroundColor: 'white', 
+           borderRadius: '16px', 
+           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
+           padding: '28px',
+           display: 'flex',
+           flexDirection: 'column',
+           height: 'fit-content',
+           maxHeight: '600px',
+           border: '1px solid rgba(0, 0, 0, 0.05)',
+           position: 'sticky',
+           top: '24px'
+         }}>
+           <div style={{ 
+             marginBottom: '24px', 
+             display: 'flex', 
+             justifyContent: 'space-between', 
+             alignItems: 'center', 
+             flexShrink: 0 
+           }}>
+             <div>
+               <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
+                 📢 Latest Announcements
+               </div>
+               <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                 Stay updated with school news and events
+               </div>
+             </div>
+             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+               <span style={{ 
+                 fontSize: '14px', 
+                 backgroundColor: 'linear-gradient(135deg, #3b82f6, #2563eb)', 
+                 background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                 color: 'white', 
+                 padding: '6px 12px', 
+                 borderRadius: '20px',
+                 fontWeight: '600',
+                 boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+               }}>
+                 82 New
+               </span>
+               <button style={{ 
+                 fontSize: '14px', 
+                 color: '#7c3aed', 
+                 background: 'none',
+                 border: 'none',
+                 cursor: 'pointer',
+                 fontWeight: '600',
+                 padding: '8px 12px',
+                 borderRadius: '8px',
+                 transition: 'all 0.2s ease',
+                 ':hover': { backgroundColor: '#f3f4f6' }
+               }}>
+                 View all →
+               </button>
+             </div>
+           </div>
+           
+           <div style={{ 
+             overflow: 'auto', 
+             maxHeight: '400px',
+             paddingRight: '8px'
+           }}>
+             {announcements.map((announcement) => (
+               <div key={announcement.id} style={{ 
+                 padding: '20px 0', 
+                 borderBottom: '1px solid #f1f5f9',
+                 transition: 'all 0.2s ease',
+                 cursor: 'pointer',
+                 ':hover': { backgroundColor: '#f8fafc', paddingLeft: '12px', paddingRight: '12px', marginLeft: '-12px', marginRight: '-12px', borderRadius: '8px' }
+               }}>
+                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                   <div style={{ 
+                     fontSize: '13px', 
+                     color: '#6b7280',
+                     backgroundColor: '#f3f4f6',
+                     padding: '4px 8px',
+                     borderRadius: '6px',
+                     fontWeight: '500'
+                   }}>
+                     📅 Tuesday 20th, 22
+                   </div>
+                   <div style={{ 
+                     fontSize: '12px', 
+                     color: '#9ca3af',
+                     backgroundColor: '#fef3c7',
+                     color: '#92400e',
+                     padding: '4px 8px',
+                     borderRadius: '6px',
+                     fontWeight: '500'
+                   }}>
+                     {announcement.date}
+                   </div>
+                 </div>
+                 <div style={{ 
+                   fontSize: '16px', 
+                   fontWeight: '700', 
+                   color: '#1f2937', 
+                   marginBottom: '8px',
+                   lineHeight: '1.3'
+                 }}>
+                   {announcement.title}
+                 </div>
+                 <div style={{ 
+                   fontSize: '14px', 
+                   color: '#6b7280', 
+                   lineHeight: '1.5',
+                   fontWeight: '400'
+                 }}>
+                   {announcement.description}
+                 </div>
+               </div>
+             ))}
+           </div>
+         </div>
+       </div>
     </div>
   );
 
@@ -477,129 +860,15 @@ const Student = () => {
           onChange={(e) => setSelectedYear(e.target.value)}
           style={{ padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '14px' }}
         >
-          <option>Academic Year 2H - 2P Term II</option>
-          <option>Academic Year 2H - 2P (Y-1)</option>
-          <option>Academic Year 2H - 2S (Y-2)</option>
-          <option>Academic Year 2H - 3K (Y-3)</option>
+          <option>Academic Year 2025-2025</option>
+          <option>Academic Year 2024-2025</option>
+          <option>Academic Year 2023-2024</option>
+          <option>Academic Year 2022-2023</option>
         </select>
       </div>
 
-      <div style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', padding: '24px' }}>
-        <div style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '600', color: '#1a202c' }}>
-          Report Card for Academic Year 2H - 2P Term II
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px', fontSize: '14px' }}>
-          <div>
-            <div><strong>Student:</strong> {reportData.student}</div>
-            <div><strong>Faculty Advisor:</strong> {reportData.faculty}</div>
-            <div><strong>Class:</strong> {reportData.class}</div>
-            <div><strong>School:</strong> {reportData.school}</div>
-          </div>
-          <div>
-            <div><strong>Grade:</strong> {reportData.grade}</div>
-            <div><strong>Teacher:</strong> {reportData.teacher}</div>
-            <div><strong>Term:</strong> {reportData.term}</div>
-          </div>
-        </div>
-
-        <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px', backgroundColor: '#e0f2fe', padding: '8px' }}>Attendance</h3>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f7fafc' }}>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'left' }}></th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Qtr 1</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Qtr 2</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Sem 1</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Qtr 3</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Qtr 4</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Sem 2</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reportData.attendance.map((row, index) => (
-                <tr key={index}>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{row.type}</td>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{row.qtr1}</td>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{row.qtr2}</td>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{Math.floor((row.qtr1 + row.qtr2) / 2)}</td>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{row.qtr3}</td>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{row.qtr4}</td>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{Math.floor((row.qtr3 + row.qtr4) / 2)}</td>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{row.total}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px', backgroundColor: '#e0f2fe', padding: '8px' }}>Subject</h3>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f7fafc' }}>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'left' }}>Subject</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Qtr 1</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Qtr 2</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Sem 1</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Qtr 3</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Qtr 4</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Sem 2</th>
-                <th style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>Final</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reportData.subjects.map((subject, index) => (
-                <tr key={index}>
-                  <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{subject.name}</td>
-                  {subject.grades.map((grade, gradeIndex) => (
-                    <td key={gradeIndex} style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontWeight: '600' }}>
-                      {grade}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div style={{ backgroundColor: '#f7fafc', padding: '16px', borderRadius: '8px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-            <thead>
-              <tr>
-                <th style={{ padding: '8px', textAlign: 'left' }}>Grade</th>
-                <th style={{ padding: '8px', textAlign: 'center' }}>GPA</th>
-                <th style={{ padding: '8px', textAlign: 'center' }}>3.67</th>
-                <th style={{ padding: '8px', textAlign: 'center' }}>3.50</th>
-                <th style={{ padding: '8px', textAlign: 'center' }}>4.00</th>
-                <th style={{ padding: '8px', textAlign: 'center' }}>4.00</th>
-                <th style={{ padding: '8px', textAlign: 'center' }}>3.97</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-
-        <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#f9f9f9', borderRadius: '8px' }}>
-          <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px' }}>Comments:</h4>
-          <p style={{ fontSize: '12px', marginBottom: '12px' }}>
-            Thanks for a fantastic year at school this year! It's been awesome to see everyone grow and develop so much and see community has 
-            really been great too. We are so happy with out of our amazing new subjects and cohort... Hope you all have a fantastic summer - and looking 
-            forward to seeing everyone back in the fall!
-          </p>
-          
-          <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px' }}>Promoted / Retained:</h4>
-          <div style={{ fontSize: '12px', backgroundColor: '#e8f5e8', padding: '8px', borderRadius: '4px' }}>
-            <strong>Promoted</strong>
-          </div>
-          
-          <p style={{ fontSize: '12px', marginTop: '12px' }}>
-            Faculty did a wonderful job all year. She's a very conscientious student who is full of energy. She is respectful to her classmates, creative 
-            and analytical in her classroom, and a great citizen of the school. Faculty has been a pleasure to have in class this year! Have a lovely 
-            summer!
-          </p>
-        </div>
+      <div style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', overflow: 'hidden' }}>
+        <ReportCard />
       </div>
     </div>
   );
@@ -878,60 +1147,75 @@ const Student = () => {
   );
 
   // Opportunities Page
-  const OpportunitiesPage = () => (
-    <div>
-      <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
-        Up-Coming Opportunities
-      </h1>
+  const OpportunitiesPage = () => {
+    // Opportunity images mapping
+    const opportunityImages = {
+      1: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&h=120&fit=crop&crop=center",
+      2: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=120&fit=crop&crop=center",
+      3: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=120&fit=crop&crop=center",
+      4: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=120&fit=crop&crop=center",
+      5: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=120&fit=crop&crop=center",
+      6: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=120&fit=crop&crop=center"
+    };
 
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '24px' }}>
-        {opportunities.map((opportunity) => (
-          <div key={opportunity.id} style={{
-            backgroundColor: 'white',
-            padding: '24px',
-            borderRadius: '12px',
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <div style={{
-              width: '100%',
-              height: '120px',
-              backgroundColor: '#f7fafc',
-              borderRadius: '8px',
-              marginBottom: '16px'
-            }}></div>
-            
-            <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1a202c', marginBottom: '8px' }}>
-              {opportunity.name}
-            </h3>
-            
-            <p style={{ fontSize: '12px', color: '#718096', marginBottom: '12px' }}>
-              {opportunity.date}
-            </p>
-            
-            <p style={{ fontSize: '14px', color: '#4a5568', lineHeight: '1.5', marginBottom: '20px', flex: 1 }}>
-              {opportunity.description}
-            </p>
-            
-            <button style={{
-              backgroundColor: '#7c3aed',
-              color: 'white',
-              padding: '10px 16px',
-              borderRadius: '8px',
-              border: 'none',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              width: '100%'
+    return (
+      <div>
+        <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
+          Up-Coming Opportunities
+        </h1>
+
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '24px' }}>
+          {opportunities.map((opportunity) => (
+            <div key={opportunity.id} style={{
+              backgroundColor: 'white',
+              padding: '24px',
+              borderRadius: '12px',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              display: 'flex',
+              flexDirection: 'column'
             }}>
-              Read and Use Opportunity
-            </button>
-          </div>
-        ))}
+              <div style={{
+                width: '100%',
+                height: '120px',
+                borderRadius: '8px',
+                marginBottom: '16px',
+                backgroundImage: `url(${opportunityImages[opportunity.id]})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}></div>
+              
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1a202c', marginBottom: '8px' }}>
+                {opportunity.name}
+              </h3>
+              
+              <p style={{ fontSize: '12px', color: '#718096', marginBottom: '12px' }}>
+                {opportunity.date}
+              </p>
+              
+              <p style={{ fontSize: '14px', color: '#4a5568', lineHeight: '1.5', marginBottom: '20px', flex: 1 }}>
+                {opportunity.description}
+              </p>
+              
+              <button style={{
+                backgroundColor: '#7c3aed',
+                color: 'white',
+                padding: '10px 16px',
+                borderRadius: '8px',
+                border: 'none',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                width: '100%'
+              }}>
+                Read and Use Opportunity
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Publish Project Page
   const PublishProjectPage = () => (
@@ -1173,10 +1457,40 @@ const Student = () => {
         toggleSidebar={toggleSidebar}
       />
 
-      {/* Main Content */}
-      <div style={mainContentStyle}>
-        {/* Header */}
-        <div style={headerStyle}>
+             {/* Main Content */}
+       <div style={mainContentStyle}>
+         {/* Sidebar Toggle Button (when sidebar is hidden on desktop) */}
+         {!isMobile && !sidebarOpen && (
+           <button
+             onClick={toggleSidebar}
+             style={{
+               position: 'fixed',
+               left: '0',
+               top: '50%',
+               transform: 'translateY(-50%)',
+               width: '32px',
+               height: '80px',
+               backgroundColor: '#7c3aed',
+               color: 'white',
+               border: 'none',
+               borderRadius: '0 8px 8px 0',
+               cursor: 'pointer',
+               zIndex: 40,
+               display: 'flex',
+               alignItems: 'center',
+               justifyContent: 'center',
+               fontSize: '16px',
+               boxShadow: '2px 0 8px rgba(0, 0, 0, 0.1)',
+               transition: 'all 0.2s'
+             }}
+             title="Show Sidebar"
+           >
+             ▶
+           </button>
+         )}
+         
+         {/* Header */}
+         <div style={headerStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             {isMobile && (
               <button
