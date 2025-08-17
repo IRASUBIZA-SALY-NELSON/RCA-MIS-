@@ -8,29 +8,46 @@ const Teacher = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedClass, setSelectedClass] = useState('Year 2A');
   const [selectedYear, setSelectedYear] = useState('2024-2025');
-  const [selectedTerm, setSelectedTerm] = useState('Term 1');
+  const [selectedTerm, setSelectedTerm] = useState('Term 2');
+  const [selectedClass, setSelectedClass] = useState('Year 2A');
   const [selectedAssessment, setSelectedAssessment] = useState('All Assessments');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [showAddStudentModal, setShowAddStudentModal] = useState(false);
   const [showAddMarksModal, setShowAddMarksModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  // Redirect if not a teacher
+  // Authentication guard
   useEffect(() => {
-    if (currentUser && currentUser.role !== 'teacher') {
-      navigate('/');
+    if (currentUser === null) {
+      // Still loading, wait
       return;
     }
+
+    if (!currentUser || currentUser.role !== 'teacher') {
+      console.error('🚫 Unauthorized access attempt to /teacher route:', {
+        user: currentUser,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        path: window.location.pathname
+      });
+      
+      // Redirect to login
+      navigate('/', { replace: true });
+      return;
+    }
+
+    // User is authorized
+    setIsAuthorized(true);
+    console.log('✅ Teacher access authorized:', {
+      userId: currentUser.id,
+      userName: currentUser.name,
+      subject: currentUser.subject,
+      timestamp: new Date().toISOString()
+    });
   }, [currentUser, navigate]);
 
-  // If not authenticated or not a teacher, show loading
-  if (!currentUser || currentUser.role !== 'teacher') {
-    return <div>Loading...</div>;
-  }
-
+  // Screen size and sidebar management
   useEffect(() => {
     const checkScreenSize = () => {
       const mobile = window.innerWidth <= 768;
@@ -44,6 +61,11 @@ const Teacher = () => {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // If not authenticated or not a teacher, show nothing
+  if (!isAuthorized) {
+    return null;
+  }
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -701,8 +723,11 @@ const Teacher = () => {
               border: 'none',
               fontSize: '14px',
               fontWeight: '600',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.2s'
             }}
+            onMouseOver={(e) => e.target.style.backgroundColor = '#6d28d9'}
+            onMouseOut={(e) => e.target.style.backgroundColor = '#7c3aed'}
           >
             ✏️ Enter Marks
           </button>
@@ -741,6 +766,25 @@ const Teacher = () => {
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         marginBottom: '24px'
       }}>
+        {/* Search Bar */}
+        <div style={{ marginBottom: '20px' }}>
+          <input
+            type="text"
+            placeholder="Search students by name or code..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '12px 16px',
+              border: '1px solid #e2e8f0',
+              borderRadius: '8px',
+              fontSize: '14px',
+              outline: 'none',
+              backgroundColor: '#f8fafc'
+            }}
+          />
+        </div>
+        
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
           <div>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
@@ -833,6 +877,86 @@ const Teacher = () => {
         </div>
       </div>
 
+      {/* Marks Summary Statistics */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        padding: '20px', 
+        borderRadius: '12px', 
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        marginBottom: '24px'
+      }}>
+        <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1a202c', marginBottom: '16px' }}>
+          Marks Summary - {selectedTerm}, {selectedYear}
+        </h3>
+        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+          {(() => {
+            const filteredStudents = students.filter(student => {
+              const matchesClass = selectedClass === 'All Classes' || student.class === selectedClass;
+              const matchesSearch = searchQuery === '' || 
+                student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                student.code.toLowerCase().includes(searchQuery.toLowerCase());
+              return matchesClass && matchesSearch;
+            });
+            const studentsWithMarks = filteredStudents.filter(student => 
+              student.marks[selectedYear] && student.marks[selectedYear][selectedTerm]
+            );
+            const totalStudents = filteredStudents.length;
+            const studentsWithMarksCount = studentsWithMarks.length;
+            const averageScore = studentsWithMarks.length > 0 
+              ? Math.round(studentsWithMarks.reduce((sum, student) => {
+                  const marks = student.marks[selectedYear][selectedTerm];
+                  return sum + (marks.CAT1 + marks.CAT2 + marks.EXAM);
+                }, 0) / studentsWithMarks.length)
+              : 0;
+            
+            return (
+              <>
+                <div style={{ 
+                  backgroundColor: '#f0f9ff', 
+                  padding: '16px', 
+                  borderRadius: '8px', 
+                  minWidth: '150px',
+                  border: '1px solid #bae6fd'
+                }}>
+                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#0369a1' }}>{totalStudents}</div>
+                  <div style={{ fontSize: '14px', color: '#0369a1' }}>Total Students</div>
+                </div>
+                <div style={{ 
+                  backgroundColor: '#f0fdf4', 
+                  padding: '16px', 
+                  borderRadius: '8px', 
+                  minWidth: '150px',
+                  border: '1px solid #bbf7d0'
+                }}>
+                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#16a34a' }}>{studentsWithMarksCount}</div>
+                  <div style={{ fontSize: '14px', color: '#16a34a' }}>With Marks</div>
+                </div>
+                <div style={{ 
+                  backgroundColor: '#fef3c7', 
+                  padding: '16px', 
+                  borderRadius: '8px', 
+                  minWidth: '150px',
+                  border: '1px solid #fde68a'
+                }}>
+                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#d97706' }}>{averageScore}/100</div>
+                  <div style={{ fontSize: '14px', color: '#d97706' }}>Average Score</div>
+                </div>
+                <div style={{ 
+                  backgroundColor: '#fef2f2', 
+                  padding: '16px', 
+                  borderRadius: '8px', 
+                  minWidth: '150px',
+                  border: '1px solid #fecaca'
+                }}>
+                  <div style={{ fontSize: '24px', fontWeight: '700', color: '#dc2626' }}>{totalStudents - studentsWithMarksCount}</div>
+                  <div style={{ fontSize: '14px', color: '#dc2626' }}>Pending Marks</div>
+                </div>
+              </>
+            );
+          })()}
+        </div>
+      </div>
+
       {/* Marks Table */}
       <div style={{ 
         backgroundColor: 'white', 
@@ -866,91 +990,328 @@ const Teacher = () => {
               </tr>
             </thead>
             <tbody>
-              {students.map((student, index) => {
-                const termMarks = student.marks[selectedYear][selectedTerm];
-                const cat1 = termMarks.CAT1;
-                const cat2 = termMarks.CAT2;
-                const exam = termMarks.EXAM;
-                const total = cat1 + cat2 + exam;
-                const percentage = Math.round((total / 100) * 100);
-                const grade = percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : 'D';
-                
-                return (
-                  <tr key={student.id} style={{ 
-                    borderBottom: '1px solid #e2e8f0',
-                    ':hover': { backgroundColor: '#f8fafc' }
-                  }}>
-                    <td style={{ padding: '16px', fontSize: '14px' }}>{index + 1}</td>
-                    <td style={{ padding: '16px', fontSize: '14px', fontWeight: '500' }}>{student.name}</td>
-                    <td style={{ padding: '16px', fontSize: '14px' }}>
-                      <span style={{
-                        backgroundColor: '#e0e7ff',
-                        color: '#3730a3',
-                        padding: '4px 8px',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: '500'
+              {(() => {
+                const filteredStudents = students.filter(student => {
+                  const matchesClass = selectedClass === 'All Classes' || student.class === selectedClass;
+                  const matchesSearch = searchQuery === '' || 
+                    student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    student.code.toLowerCase().includes(searchQuery.toLowerCase());
+                  return matchesClass && matchesSearch;
+                });
+
+                if (filteredStudents.length === 0) {
+                  return (
+                    <tr>
+                      <td colSpan="9" style={{ 
+                        padding: '40px 16px', 
+                        textAlign: 'center', 
+                        color: '#6b7280',
+                        fontSize: '16px'
                       }}>
-                        {student.class}
-                      </span>
-                    </td>
-                    <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>{cat1}/20</td>
-                    <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>{cat2}/20</td>
-                    <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>{exam}/60</td>
-                    <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>{total}/100</td>
-                    <td style={{ padding: '16px', fontSize: '14px' }}>
-                      <span style={{
-                        backgroundColor: grade === 'A' ? '#dcfce7' : grade === 'B' ? '#dbeafe' : grade === 'C' ? '#fef3c7' : '#fee2e2',
-                        color: grade === 'A' ? '#166534' : grade === 'B' ? '#1d4ed8' : grade === 'C' ? '#92400e' : '#dc2626',
-                        padding: '4px 8px',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: '600'
+                        {searchQuery ? `No students found matching "${searchQuery}"` : 'No students found for the selected criteria'}
+                      </td>
+                    </tr>
+                  );
+                }
+
+                return filteredStudents.map((student, index) => {
+                  // Check if marks exist for the selected year and term
+                  if (!student.marks[selectedYear] || !student.marks[selectedYear][selectedTerm]) {
+                    return (
+                      <tr key={student.id} style={{ 
+                        borderBottom: '1px solid #e2e8f0',
+                        backgroundColor: '#fef2f2'
                       }}>
-                        {grade}
-                      </span>
-                    </td>
-                    <td style={{ padding: '16px' }}>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <button style={{
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: '6px',
-                          border: '1px solid #e2e8f0',
-                          backgroundColor: 'white',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                          title="Edit Marks"
-                        >
-                          ✏️
-                        </button>
-                        <button style={{
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: '6px',
-                          border: '1px solid #e2e8f0',
-                          backgroundColor: 'white',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                          title="Performance History"
-                        >
-                          📈
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                        <td style={{ padding: '16px', fontSize: '14px' }}>{index + 1}</td>
+                        <td style={{ padding: '16px', fontSize: '14px', fontWeight: '500' }}>{student.name}</td>
+                        <td style={{ padding: '16px', fontSize: '14px' }}>
+                          <span style={{
+                            backgroundColor: '#e0e7ff',
+                            color: '#3730a3',
+                            padding: '4px 8px',
+                            borderRadius: '12px',
+                            fontSize: '12px',
+                            fontWeight: '500'
+                          }}>
+                            {student.class}
+                          </span>
+                        </td>
+                        <td style={{ padding: '16px', fontSize: '14px', color: '#6b7280' }} colSpan="5">No marks available for {selectedTerm}, {selectedYear}</td>
+                        <td style={{ padding: '16px' }}>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '6px',
+                              border: '1px solid #e2e8f0',
+                              backgroundColor: 'white',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                              title="Add Marks"
+                            >
+                              ➕
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  }
+
+                  const termMarks = student.marks[selectedYear][selectedTerm];
+                  const cat1 = termMarks.CAT1 || 0;
+                  const cat2 = termMarks.CAT2 || 0;
+                  const exam = termMarks.EXAM || 0;
+                  const total = cat1 + cat2 + exam;
+                  const percentage = Math.round((total / 100) * 100);
+                  const grade = percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F';
+                  
+                  return (
+                    <tr key={student.id} style={{ 
+                      borderBottom: '1px solid #e2e8f0'
+                    }}>
+                      <td style={{ padding: '16px', fontSize: '14px' }}>{index + 1}</td>
+                      <td style={{ padding: '16px', fontSize: '14px', fontWeight: '500' }}>{student.name}</td>
+                      <td style={{ padding: '16px', fontSize: '14px' }}>
+                        <span style={{
+                          backgroundColor: '#e0e7ff',
+                          color: '#3730a3',
+                          padding: '4px 8px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: '500'
+                        }}>
+                          {student.class}
+                        </span>
+                      </td>
+                      <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>{cat1}/20</td>
+                      <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>{cat2}/20</td>
+                      <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>{exam}/60</td>
+                      <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600' }}>{total}/100</td>
+                      <td style={{ padding: '16px', fontSize: '14px' }}>
+                        <span style={{
+                          backgroundColor: grade === 'A' ? '#dcfce7' : grade === 'B' ? '#dbeafe' : grade === 'C' ? '#fef3c7' : grade === 'D' ? '#fee2e2' : '#fef2f2',
+                          color: grade === 'A' ? '#166534' : grade === 'B' ? '#1d4ed8' : grade === 'C' ? '#92400e' : grade === 'D' ? '#dc2626' : '#991b1b',
+                          padding: '4px 8px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: '600'
+                        }}>
+                          {grade}
+                        </span>
+                      </td>
+                      <td style={{ padding: '16px' }}>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            border: '1px solid #e2e8f0',
+                            backgroundColor: 'white',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                            title="Edit Marks"
+                          >
+                            ✏️
+                          </button>
+                          <button style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            border: '1px solid #e2e8f0',
+                            backgroundColor: 'white',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                            title="Performance History"
+                          >
+                            📈
+                          </button>
+                        </div>
+                                           </td>
+                   </tr>
+                 );
+               });
+             })()}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Add/Edit Marks Modal */}
+      {showAddMarksModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            padding: '24px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '20px'
+            }}>
+              <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#1a202c' }}>
+                Enter Student Marks
+              </h3>
+              <button
+                onClick={() => setShowAddMarksModal(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#6b7280'
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div style={{ marginBottom: '20px' }}>
+              <p style={{ color: '#6b7280', fontSize: '14px' }}>
+                Enter marks for {selectedTerm}, {selectedYear} - {selectedClass}
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                Student
+              </label>
+              <select style={{
+                width: '100%',
+                padding: '12px 16px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '8px',
+                fontSize: '14px',
+                outline: 'none'
+              }}>
+                <option>Select a student</option>
+                {students
+                  .filter(student => selectedClass === 'All Classes' || student.class === selectedClass)
+                  .map(student => (
+                    <option key={student.id} value={student.id}>{student.name} - {student.code}</option>
+                  ))
+                }
+              </select>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  CAT 1 (Max: 20)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="20"
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    outline: 'none'
+                  }}
+                  placeholder="0-20"
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                  CAT 2 (Max: 20)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="20"
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    outline: 'none'
+                  }}
+                  placeholder="0-20"
+                />
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>
+                Exam (Max: 60)
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="60"
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none'
+                }}
+                placeholder="0-60"
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setShowAddMarksModal(false)}
+                style={{
+                  padding: '10px 20px',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                  backgroundColor: 'white',
+                  color: '#374151',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button style={{
+                padding: '10px 20px',
+                backgroundColor: '#7c3aed',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}>
+                Save Marks
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 

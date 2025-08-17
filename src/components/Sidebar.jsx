@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
-const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
-  // Check if we're on mobile
-  const isMobile = window.innerWidth <= 768;
+const Sidebar = ({ currentPage, onPageChange, isOpen, onToggle, userRole = 'student', isMobile = false }) => {
   
   const sidebarStyle = {
     width: '240px',
@@ -111,22 +109,45 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
     justifyContent: 'center'
   };
 
-  const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'students', label: 'Students', icon: '👥' },
-    { id: 'marks', label: 'Marks', icon: '📝' },
-    { id: 'report-cards', label: 'Report Cards', icon: '📋' },
-    { id: 'projects', label: 'Projects', icon: '💡' },
-    { id: 'opportunities', label: 'Opportunities', icon: '🎯' },
-    { id: 'attendance', label: 'Attendance', icon: '✅' },
-    { id: 'assignments', label: 'Assignments', icon: '📚' },
-    { id: 'exams', label: 'Exams', icon: '📝' },
-    { id: 'timetable', label: 'Timetable', icon: '⏰' },
-    { id: 'communications', label: 'Communications', icon: '💬' },
-    { id: 'analytics', label: 'Analytics', icon: '📈' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
-    { id: 'profile', label: 'Profile', icon: '👤' }
-  ];
+  const getMenuItems = () => {
+    if (userRole === 'admin') {
+      return [
+        { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+        { id: 'students', label: 'Students', icon: '👥' },
+        { id: 'teachers', label: 'Teachers', icon: '👨‍🏫' },
+        { id: 'parents', label: 'Parents', icon: '👨‍👩‍👧‍👦' },
+        { id: 'classes', label: 'Classes', icon: '🏫' },
+        { id: 'subjects', label: 'Subjects', icon: '📚' },
+        { id: 'rankings', label: 'Rankings', icon: '🏆' },
+        { id: 'attendance', label: 'Attendance', icon: '✅' },
+        { id: 'exams', label: 'Exams', icon: '📝' },
+        { id: 'timetable', label: 'Timetable', icon: '⏰' },
+        { id: 'communications', label: 'Communications', icon: '💬' },
+        { id: 'analytics', label: 'Analytics', icon: '📈' },
+        { id: 'settings', label: 'Settings', icon: '⚙️' },
+        { id: 'profile', label: 'Profile', icon: '👤' }
+      ];
+    } else {
+      return [
+        { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+        { id: 'students', label: 'Students', icon: '👥' },
+        { id: 'marks', label: 'Marks', icon: '📝' },
+        { id: 'report-cards', label: 'Report Cards', icon: '📋' },
+        { id: 'projects', label: 'Projects', icon: '💡' },
+        { id: 'opportunities', label: 'Opportunities', icon: '🎯' },
+        { id: 'attendance', label: 'Attendance', icon: '✅' },
+        { id: 'assignments', label: 'Assignments', icon: '📚' },
+        { id: 'exams', label: 'Exams', icon: '📝' },
+        { id: 'timetable', label: 'Timetable', icon: '⏰' },
+        { id: 'communications', label: 'Communications', icon: '💬' },
+        { id: 'analytics', label: 'Analytics', icon: '📈' },
+        { id: 'settings', label: 'Settings', icon: '⚙️' },
+        { id: 'profile', label: 'Profile', icon: '👤' }
+      ];
+    }
+  };
+
+  const menuItems = getMenuItems();
 
   return (
     <>
@@ -143,7 +164,7 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
             zIndex: 40,
             display: 'block'
           }}
-          onClick={toggleSidebar}
+          onClick={onToggle}
         />
       )}
       
@@ -159,7 +180,7 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
           </div>
           <button 
             style={toggleButtonStyle}
-            onClick={toggleSidebar}
+            onClick={onToggle}
             title="Toggle Sidebar"
           >
             {isOpen ? '◀' : '▶'}
@@ -174,10 +195,10 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, toggleSidebar }) => {
               key={item.id}
               style={currentPage === item.id ? menuItemActiveStyle : menuItemStyle}
               onClick={() => {
-                setCurrentPage(item.id);
+                onPageChange(item.id);
                 // Close sidebar on mobile after selection
                 if (window.innerWidth <= 768) {
-                  toggleSidebar();
+                  onToggle();
                 }
               }}
             >

@@ -3,7 +3,9 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Student from './components/Student'
 import Teacher from './components/Teacher'
+import Admin from './components/Admin'
 import Login from './components/Login'
+import ForgotPassword from './components/ForgotPassword'
 import { AuthProvider } from './contexts/AuthContext'
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/student" element={<Student />} />
           <Route path="/teacher" element={<Teacher />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -12,20 +12,46 @@ const Student = () => {
   const [selectedYear, setSelectedYear] = useState('Academic Year 2H - 2P Term II');
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [publishForm, setPublishForm] = useState({
+    projectName: '',
+    websiteLink: '',
+    githubLink: '',
+    tags: [],
+    description: ''
+  });
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  // Redirect if not a student
+  // Authentication guard
   useEffect(() => {
-    if (currentUser && currentUser.role !== 'student') {
-      navigate('/');
+    if (currentUser === null) {
+      // Still loading, wait
       return;
     }
+
+    if (!currentUser || currentUser.role !== 'student') {
+      console.error('🚫 Unauthorized access attempt to /student route:', {
+        user: currentUser,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        path: window.location.pathname
+      });
+      
+      // Redirect to login
+      navigate('/', { replace: true });
+      return;
+    }
+
+    // User is authorized
+    setIsAuthorized(true);
+    console.log('✅ Student access authorized:', {
+      userId: currentUser.id,
+      userName: currentUser.name,
+      timestamp: new Date().toISOString()
+    });
   }, [currentUser, navigate]);
 
-  // If not authenticated or not a student, show loading
-  if (!currentUser || currentUser.role !== 'student') {
-    return <div>Loading...</div>;
-  }
-
+  // Screen size and sidebar management
   useEffect(() => {
     const checkScreenSize = () => {
       const mobile = window.innerWidth <= 768;
@@ -40,6 +66,11 @@ const Student = () => {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // If not authenticated or not a student, show nothing
+  if (!isAuthorized) {
+    return null;
+  }
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -223,7 +254,7 @@ const Student = () => {
     ],
     subjects: [
       { name: "English (Language)", grades: ["A", "A", "A+", "A", "A", "A"] },
-      { name: "Literary (History)", grades: ["A", "B", "A", "A", "A+", "A"] },
+      { name: "Literature (History)", grades: ["A", "B", "A", "A", "A+", "A"] },
       { name: "Computer Art (Language Art)", grades: ["B+", "B", "A", "A", "B+", "A"] },
       { name: "Mathematics (Calculus)", grades: ["A", "A", "A", "A", "A", "A"] },
       { name: "Science (General)", grades: ["A", "B", "A+", "A", "A", "A"] },
@@ -239,15 +270,7 @@ const Student = () => {
     }
   };
 
-  const [publishForm, setPublishForm] = useState({
-    projectName: '',
-    websiteLink: '',
-    githubLink: '',
-    tags: [],
-    description: ''
-  });
 
-  const [selectedProject, setSelectedProject] = useState(null);
 
   // Common styles
   const containerStyle = {
@@ -1931,89 +1954,161 @@ const Student = () => {
   );
 
   // Timetable Page
-  const TimetablePage = () => (
-    <div>
-      <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
-        Class Timetable
-      </h1>
-      
-      {/* Timetable */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        borderRadius: '16px', 
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-        border: '1px solid #e5e7eb',
-        overflow: 'hidden'
-      }}>
-        <div style={{ 
-          padding: '20px 24px',
-          borderBottom: '1px solid #e5e7eb',
-          backgroundColor: '#f9fafb'
-        }}>
-          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', margin: '0' }}>
-            Weekly Schedule
-          </h3>
-        </div>
+  const TimetablePage = () => {
+    // Timetable data matching the image
+    const timetableData = [
+      { time: "8:00-8:50", hour: 1, monday: "Chemistry", tuesday: "Swahili", wednesday: "Physics", thursday: "Chemistry", friday: "English" },
+      { time: "8:50-9:40", hour: 2, monday: "Kinyarwanda", tuesday: "Spiritual Activities", wednesday: "History", thursday: "Chemistry", friday: "Computer Science" },
+      { time: "9:40-10:30", hour: 3, monday: "Physics", tuesday: "French", wednesday: "Math", thursday: "History", friday: "Geography" },
+      { time: "10:30-10:45", hour: "Break", monday: "Break", tuesday: "Break", wednesday: "Break", thursday: "Break", friday: "Break" },
+      { time: "10:45-11:35", hour: 4, monday: "Physics", tuesday: "Kinyarwanda", wednesday: "English", thursday: "Entrepreneurship", friday: "Entrepreneurship" },
+      { time: "11:35-12:25", hour: 5, monday: "Biology", tuesday: "Math", wednesday: "English", thursday: "English", friday: "Computer Science" },
+      { time: "12:25-2:00", hour: "Lunch", monday: "Lunch", tuesday: "Lunch", wednesday: "Lunch", thursday: "Lunch", friday: "Lunch" },
+      { time: "2:00-2:50", hour: 6, monday: "Math", tuesday: "Biology", wednesday: "", thursday: "Biology", friday: "Kinyarwanda" },
+      { time: "2:50-3:40", hour: 7, monday: "Math", tuesday: "Math", wednesday: "", thursday: "Biology", friday: "Geography" },
+      { time: "3:40-4:30", hour: 8, monday: "Math", tuesday: "French", wednesday: "", thursday: "Political Science", friday: "English" }
+    ];
+
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+    return (
+      <div>
+        <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
+          Class Timetable
+        </h1>
         
-        <div style={{ padding: '24px' }}>
-          {studentData.timetable.map((day, dayIndex) => (
-            <div key={dayIndex} style={{ marginBottom: dayIndex < studentData.timetable.length - 1 ? '24px' : '0' }}>
-              <h4 style={{ 
-                fontSize: '16px', 
-                fontWeight: '600', 
-                color: '#374151', 
-                marginBottom: '16px',
-                padding: '12px 16px',
-                backgroundColor: '#f3f4f6',
-                borderRadius: '8px'
-              }}>
-                {day.day}
-              </h4>
-              
-              <div style={{ display: 'grid', gap: '12px' }}>
-                {day.subjects.map((subject, subjectIndex) => (
-                  <div key={subjectIndex} style={{ 
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '16px',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    backgroundColor: '#f9fafb'
+        {/* Timetable */}
+        <div style={{ 
+          backgroundColor: 'white', 
+          borderRadius: '16px', 
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb',
+          overflow: 'hidden'
+        }}>
+          <div style={{ 
+            padding: '20px 24px',
+            borderBottom: '1px solid #e5e7eb',
+            backgroundColor: '#f9fafb'
+          }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', margin: '0' }}>
+              Weekly Schedule
+            </h3>
+          </div>
+          
+          <div style={{ overflow: 'auto' }}>
+            <table style={{ 
+              width: '100%', 
+              borderCollapse: 'collapse',
+              fontSize: '14px'
+            }}>
+              <thead>
+                <tr style={{ backgroundColor: '#f3f4f6' }}>
+                  <th style={{ 
+                    padding: '16px 12px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #e5e7eb',
+                    fontWeight: '600',
+                    color: '#374151',
+                    minWidth: '120px'
                   }}>
-                    <div style={{ 
-                      width: '80px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      color: '#6b7280'
+                    Time
+                  </th>
+                  <th style={{ 
+                    padding: '16px 12px', 
+                    textAlign: 'center', 
+                    borderBottom: '2px solid #e5e7eb',
+                    fontWeight: '600',
+                    color: '#374151',
+                    minWidth: '80px'
+                  }}>
+                    Hour
+                  </th>
+                  {days.map(day => (
+                    <th key={day} style={{ 
+                      padding: '16px 12px', 
+                      textAlign: 'center', 
+                      borderBottom: '2px solid #e5e7eb',
+                      fontWeight: '600',
+                      color: '#374151',
+                      minWidth: '140px'
                     }}>
-                      {subject.time}
-                    </div>
-                    <div style={{ 
-                      flex: '1',
-                      fontSize: '16px',
+                      {day}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {timetableData.map((row, index) => (
+                  <tr key={index} style={{ 
+                    backgroundColor: index % 2 === 0 ? '#ffffff' : '#f9fafb',
+                    borderBottom: '1px solid #e5e7eb'
+                  }}>
+                    <td style={{ 
+                      padding: '16px 12px', 
+                      borderRight: '1px solid #e5e7eb',
                       fontWeight: '500',
                       color: '#374151'
                     }}>
-                      {subject.subject}
-                    </div>
-                    <div style={{ 
-                      fontSize: '14px',
-                      color: '#6b7280',
-                      backgroundColor: '#e5e7eb',
-                      padding: '4px 12px',
-                      borderRadius: '6px'
+                      {row.time}
+                    </td>
+                    <td style={{ 
+                      padding: '16px 12px', 
+                      textAlign: 'center',
+                      borderRight: '1px solid #e5e7eb',
+                      fontWeight: '600',
+                      color: row.hour === 'Break' || row.hour === 'Lunch' ? '#059669' : '#374151',
+                      backgroundColor: row.hour === 'Break' ? '#d1fae5' : row.hour === 'Lunch' ? '#fef3c7' : 'transparent'
                     }}>
-                      {subject.room}
-                    </div>
-                  </div>
+                      {row.hour}
+                    </td>
+                    {days.map(day => {
+                      const dayKey = day.toLowerCase();
+                      const subject = row[dayKey];
+                      const isBreak = row.hour === 'Break';
+                      const isLunch = row.hour === 'Lunch';
+                      const isEmpty = subject === '';
+                      
+                      return (
+                        <td key={day} style={{ 
+                          padding: '16px 12px', 
+                          textAlign: 'center',
+                          borderRight: '1px solid #e5e7eb',
+                          fontWeight: '500',
+                          color: isBreak || isLunch ? '#059669' : '#374151',
+                          backgroundColor: isBreak ? '#d1fae5' : isLunch ? '#fef3c7' : isEmpty ? '#f3f4f6' : 'transparent',
+                          position: 'relative'
+                        }}>
+                          {isEmpty ? (
+                            <div style={{
+                              position: 'absolute',
+                              top: '50%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              width: '100%',
+                              height: '100%',
+                              backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, #e5e7eb 2px, #e5e7eb 4px)',
+                              opacity: 0.3
+                            }} />
+                          ) : (
+                            <span style={{ 
+                              fontSize: isBreak || isLunch ? '14px' : '13px',
+                              fontWeight: isBreak || isLunch ? '600' : '500'
+                            }}>
+                              {subject}
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
                 ))}
-              </div>
-            </div>
-          ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Communications Page
   const CommunicationsPage = () => (

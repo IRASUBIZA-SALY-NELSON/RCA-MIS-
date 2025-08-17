@@ -13,8 +13,9 @@ const Toast = ({ message, type = 'info', onClose, duration = 5000 }) => {
     const baseStyle = {
       position: 'fixed',
       top: '20px',
-      right: '20px',
-      padding: '16px 20px',
+      right: '20px', // Mobile responsive - full width on small screens
+      left: '20px', 
+      padding: '12px 16px',
       borderRadius: '8px',
       boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       color: 'white',
@@ -29,6 +30,15 @@ const Toast = ({ message, type = 'info', onClose, duration = 5000 }) => {
       animation: 'slideInRight 0.3s ease-out',
       cursor: 'pointer'
     };
+
+    // Responsive adjustments
+    if (window.innerWidth <= 768) {
+      baseStyle.right = '20px';
+      baseStyle.left = '20px';
+      baseStyle.maxWidth = 'none';
+      baseStyle.padding = '16px 20px';
+      baseStyle.fontSize = '16px';
+    }
 
     const typeStyles = {
       success: {
@@ -87,6 +97,19 @@ const Toast = ({ message, type = 'info', onClose, duration = 5000 }) => {
               opacity: 0;
             }
           }
+
+          @media (max-width: 768px) {
+            @keyframes slideInRight {
+              from {
+                transform: translateY(-100%);
+                opacity: 0;
+              }
+              to {
+                transform: translateY(0);
+                opacity: 1;
+              }
+            }
+          }
         `}
       </style>
       <div 
@@ -94,9 +117,9 @@ const Toast = ({ message, type = 'info', onClose, duration = 5000 }) => {
         onClick={onClose}
         title="Click to dismiss"
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '16px' }}>{getIcon()}</span>
-          <span>{message}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1' }}>
+          <span style={{ fontSize: window.innerWidth <= 768 ? '18px' : '16px' }}>{getIcon()}</span>
+          <span style={{ wordBreak: 'break-word' }}>{message}</span>
         </div>
         <button
           onClick={(e) => {
@@ -107,16 +130,17 @@ const Toast = ({ message, type = 'info', onClose, duration = 5000 }) => {
             background: 'none',
             border: 'none',
             color: 'white',
-            fontSize: '18px',
+            fontSize: window.innerWidth <= 768 ? '20px' : '18px',
             cursor: 'pointer',
-            padding: '0',
-            width: '20px',
-            height: '20px',
+            padding: '4px',
+            width: window.innerWidth <= 768 ? '24px' : '20px',
+            height: window.innerWidth <= 768 ? '24px' : '20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: '50%',
-            transition: 'background-color 0.2s'
+            transition: 'background-color 0.2s',
+            flexShrink: 0
           }}
           onMouseOver={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
           onMouseOut={(e) => e.target.style.backgroundColor = 'transparent'}
