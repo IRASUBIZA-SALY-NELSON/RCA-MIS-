@@ -1,13 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import ReportCard from './ReportCard';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Student = () => {
+  const { currentUser, hasPermission, logout } = useAuth();
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedYear, setSelectedYear] = useState('Academic Year 2H - 2P Term II');
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Redirect if not a student
+  useEffect(() => {
+    if (currentUser && currentUser.role !== 'student') {
+      navigate('/');
+      return;
+    }
+  }, [currentUser, navigate]);
+
+  // If not authenticated or not a student, show loading
+  if (!currentUser || currentUser.role !== 'student') {
+    return <div>Loading...</div>;
+  }
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -26,6 +43,60 @@ const Student = () => {
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  // Student-specific data based on currentUser
+  const studentData = {
+    id: currentUser.id,
+    name: currentUser.name,
+    email: currentUser.email,
+    class: currentUser.class,
+    studentCode: currentUser.studentCode,
+    // Mock data specific to this student
+    marks: [
+      { lesson: "Mathematics", marks: 8.5, weight: 10, status: "PASS", comment: "EXAM", term: "Term II" },
+      { lesson: "Mathematics", marks: 9.0, weight: 10, status: "PASS", comment: "CAT", term: "Term II" },
+      { lesson: "Physics", marks: 7.5, weight: 10, status: "PASS", comment: "EXAM", term: "Term II" },
+      { lesson: "Physics", marks: 8.0, weight: 10, status: "PASS", comment: "CAT", term: "Term II" },
+      { lesson: "Computer Science", marks: 9.5, weight: 10, status: "PASS", comment: "EXAM", term: "Term II" }
+    ],
+    attendance: [
+      { date: "2024-01-15", status: "Present", subject: "Mathematics", time: "08:00" },
+      { date: "2024-01-14", status: "Present", subject: "Physics", time: "10:00" },
+      { date: "2024-01-13", status: "Present", subject: "Computer Science", time: "14:00" },
+      { date: "2024-01-12", status: "Late", subject: "Mathematics", time: "08:15" },
+      { date: "2024-01-11", status: "Present", subject: "Physics", time: "10:00" },
+      { date: "2024-01-10", status: "Absent", subject: "Computer Science", time: "14:00" },
+      { date: "2024-01-09", status: "Present", subject: "Mathematics", time: "08:00" },
+      { date: "2024-01-08", status: "Present", subject: "Physics", time: "10:00" }
+    ],
+    assignments: [
+      { id: 1, title: "Calculus Problem Set", subject: "Mathematics", dueDate: "2024-01-20", status: "Submitted", grade: "A-" },
+      { id: 2, title: "Physics Lab Report", subject: "Physics", dueDate: "2024-01-18", status: "Submitted", grade: "B+" },
+      { id: 3, title: "Programming Project", subject: "Computer Science", dueDate: "2024-01-25", status: "Pending" }
+    ],
+    exams: [
+      { id: 1, title: "Mid-Term Mathematics", subject: "Mathematics", date: "2024-01-30", duration: "2 hours", status: "Scheduled" },
+      { id: 2, title: "Physics Final", subject: "Physics", date: "2024-02-05", duration: "3 hours", status: "Scheduled" },
+      { id: 3, title: "Computer Science Practical", subject: "Computer Science", date: "2024-02-10", duration: "4 hours", status: "Scheduled" }
+    ],
+    timetable: [
+      { day: "Monday", subjects: [
+        { time: "08:00-09:00", subject: "Mathematics", room: "Room 101" },
+        { time: "09:00-10:00", subject: "Physics", room: "Room 102" },
+        { time: "10:30-11:30", subject: "Computer Science", room: "Lab 1" }
+      ]},
+      { day: "Tuesday", subjects: [
+        { time: "08:00-09:00", subject: "Mathematics", room: "Room 101" },
+        { time: "09:00-10:00", subject: "Physics", room: "Room 102" },
+        { time: "10:30-11:30", subject: "Computer Science", room: "Lab 1" }
+      ]},
+      { day: "Wednesday", subjects: [
+        { time: "08:00-09:00", subject: "Mathematics", room: "Room 101" },
+        { time: "09:00-10:00", subject: "Physics", room: "Room 102" },
+        { time: "10:30-11:30", subject: "Computer Science", room: "Lab 1" }
+      ]}
+    ]
   };
 
   // Sample data for the innovations table
@@ -352,964 +423,461 @@ const Student = () => {
     );
   };
 
-  // // Dashboard Page
-  // const DashboardPage = () => (
-  //   <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-  //     {/* Enhanced Header Section */}
-  //     <div style={{ 
-  //       marginBottom: '32px', 
-  //       flexShrink: 0,
-  //       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  //       borderRadius: '16px',
-  //       padding: '32px',
-  //       color: 'white',
-  //       position: 'relative',
-  //       overflow: 'hidden'
-  //     }}>
-  //       <div style={{ 
-  //         position: 'absolute', 
-  //         top: '-50%', 
-  //         right: '-20%', 
-  //         width: '200px', 
-  //         height: '200px', 
-  //         background: 'rgba(255,255,255,0.1)', 
-  //         borderRadius: '50%',
-  //         zIndex: 1
-  //       }}></div>
-  //       <div style={{ 
-  //         position: 'absolute', 
-  //         bottom: '-30%', 
-  //         left: '-10%', 
-  //         width: '150px', 
-  //         height: '150px', 
-  //         background: 'rgba(255,255,255,0.05)', 
-  //         borderRadius: '50%',
-  //         zIndex: 1
-  //       }}></div>
-  //       <div style={{ position: 'relative', zIndex: 2 }}>
-  //         <h1 style={{ 
-  //           fontSize: '32px', 
-  //           fontWeight: '800', 
-  //           marginBottom: '8px',
-  //           textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-  //         }}>
-  //           Welcome Back, Saly Nelson! 👋
-  //         </h1>
-  //         <p style={{ 
-  //           fontSize: '16px', 
-  //           opacity: 0.9,
-  //           marginBottom: '0',
-  //           fontWeight: '400'
-  //         }}>
-  //           Here's your academic performance overview and latest updates
-  //         </p>
-  //       </div>
-  //     </div>
+  // Dashboard Page
+  const DashboardPage = () => {
+    const [isMobile, setIsMobile] = useState(false);
 
-  //            <div style={{ 
-  //        display: 'grid', 
-  //        gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 2fr) minmax(0, 1fr)', 
-  //        gap: '24px', 
-  //        flex: '1',
-  //        minHeight: 0
-  //      }}>
-  //        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', minHeight: 0 }}>
-  //          {/* Enhanced Stats Cards */}
-  //          <div style={{ 
-  //            display: 'grid', 
-  //            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
-  //            gap: '20px', 
-  //            flexShrink: 0 
-  //          }}>
-  //            <div style={{ 
-  //              backgroundColor: 'white', 
-  //              padding: '28px', 
-  //              borderRadius: '16px', 
-  //              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-  //              border: '1px solid rgba(34, 197, 94, 0.1)',
-  //              position: 'relative',
-  //              overflow: 'hidden'
-  //            }}>
-  //              <div style={{ 
-  //                position: 'absolute', 
-  //                top: '0', 
-  //                right: '0', 
-  //                width: '60px', 
-  //                height: '60px', 
-  //                background: 'linear-gradient(135deg, #22c55e, #16a34a)', 
-  //                borderRadius: '0 16px 0 60px',
-  //                opacity: 0.1
-  //              }}></div>
-  //              <div style={{ position: 'relative', zIndex: 2 }}>
-  //                <div style={{ 
-  //                  fontSize: '36px', 
-  //                  fontWeight: '800', 
-  //                  marginBottom: '8px', 
-  //                  color: '#22c55e',
-  //                  display: 'flex',
-  //                  alignItems: 'center',
-  //                  gap: '8px'
-  //                }}>
-  //                  89% 📈
-  //                </div>
-  //                <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Average Performance</div>
-  //                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>+5.2% from last term</div>
-  //              </div>
-  //            </div>
-             
-  //            <div style={{ 
-  //              backgroundColor: 'white', 
-  //              padding: '28px', 
-  //              borderRadius: '16px', 
-  //              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-  //              border: '1px solid rgba(59, 130, 246, 0.1)',
-  //              position: 'relative',
-  //              overflow: 'hidden'
-  //            }}>
-  //              <div style={{ 
-  //                position: 'absolute', 
-  //                top: '0', 
-  //                right: '0', 
-  //                width: '60px', 
-  //                height: '60px', 
-  //                background: 'linear-gradient(135deg, #3b82f6, #2563eb)', 
-  //                borderRadius: '0 16px 0 60px',
-  //                opacity: 0.1
-  //              }}></div>
-  //              <div style={{ position: 'relative', zIndex: 2 }}>
-  //                <div style={{ 
-  //                  fontSize: '36px', 
-  //                  fontWeight: '800', 
-  //                  marginBottom: '8px', 
-  //                  color: '#3b82f6',
-  //                  display: 'flex',
-  //                  alignItems: 'center',
-  //                  gap: '8px'
-  //                }}>
-  //                  Year 2C 🎓
-  //                </div>
-  //                <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Current Class</div>
-  //                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>Software Engineering</div>
-  //              </div>
-  //            </div>
-             
-  //            <div style={{ 
-  //              backgroundColor: 'white', 
-  //              padding: '28px', 
-  //              borderRadius: '16px', 
-  //              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-  //              border: '1px solid rgba(168, 85, 247, 0.1)',
-  //              position: 'relative',
-  //              overflow: 'hidden'
-  //            }}>
-  //              <div style={{ 
-  //                position: 'absolute', 
-  //                top: '0', 
-  //                right: '0', 
-  //                width: '60px', 
-  //                height: '60px', 
-  //                background: 'linear-gradient(135deg, #a855f7, #9333ea)', 
-  //                borderRadius: '0 16px 0 60px',
-  //                opacity: 0.1
-  //              }}></div>
-  //              <div style={{ position: 'relative', zIndex: 2 }}>
-  //                <div style={{ 
-  //                  fontSize: '36px', 
-  //                  fontWeight: '800', 
-  //                  marginBottom: '8px', 
-  //                  color: '#a855f7',
-  //                  display: 'flex',
-  //                  alignItems: 'center',
-  //                  gap: '8px'
-  //                }}>
-  //                  34 💡
-  //                </div>
-  //                <div style={{ fontSize: '16px', color: '#374151', fontWeight: '600' }}>Innovations</div>
-  //                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>+12 this semester</div>
-  //              </div>
-  //            </div>
-  //          </div>
+    useEffect(() => {
+      const checkScreenSize = () => {
+        setIsMobile(window.innerWidth <= 768);
+      };
+      checkScreenSize();
+      window.addEventListener('resize', checkScreenSize);
+      return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
 
-  //          <div style={{ 
-  //            backgroundColor: 'white', 
-  //            padding: '32px', 
-  //            borderRadius: '16px', 
-  //            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
-  //            flex: '1',
-  //            minHeight: '500px',
-  //            display: 'flex',
-  //            flexDirection: 'column',
-  //            border: '1px solid rgba(0, 0, 0, 0.05)'
-  //          }}>
-  //            <div style={{ 
-  //              display: 'flex', 
-  //              justifyContent: 'space-between', 
-  //              alignItems: 'center', 
-  //              marginBottom: '24px', 
-  //              flexShrink: 0 
-  //            }}>
-  //              <div>
-  //                <div style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
-  //                  📊 Performance Analytics
-  //                </div>
-  //                <div style={{ fontSize: '14px', color: '#6b7280' }}>
-  //                  Your academic progress over the last 8 months
-  //                </div>
-  //              </div>
-  //              <div style={{ 
-  //                backgroundColor: 'linear-gradient(135deg, #22c55e, #16a34a)', 
-  //                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-  //                color: 'white', 
-  //                padding: '12px 20px', 
-  //                borderRadius: '12px', 
-  //                fontSize: '16px', 
-  //                fontWeight: '700',
-  //                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
-  //              }}>
-  //                Mid Term II: 88.4%
-  //              </div>
-  //            </div>
-  //            <div style={{ flex: '1', minHeight: '400px', position: 'relative' }}>
-  //              <PerformanceChart />
-  //            </div>
-  //          </div>
+         // Use student-specific marks data
+     const latestMarks = studentData.marks.slice(0, 5); // Show first 5 marks
 
-  //          <div style={{ 
-  //            backgroundColor: 'white', 
-  //            borderRadius: '16px', 
-  //            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
-  //            overflow: 'hidden',
-  //            flex: '1',
-  //            minHeight: 0,
-  //            display: 'flex',
-  //            flexDirection: 'column',
-  //            border: '1px solid rgba(0, 0, 0, 0.05)'
-  //          }}>
-  //            <div style={{ 
-  //              padding: '24px 28px', 
-  //              borderBottom: '1px solid #e5e7eb', 
-  //              flexShrink: 0,
-  //              background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
-  //            }}>
-  //              <div style={{ 
-  //                display: 'flex', 
-  //                justifyContent: 'space-between', 
-  //                alignItems: 'center' 
-  //              }}>
-  //                <div>
-  //                  <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
-  //                    💡 Your Innovations Portfolio
-  //                  </div>
-  //                  <div style={{ fontSize: '14px', color: '#6b7280' }}>
-  //                    Track your latest projects and their engagement
-  //                  </div>
-  //                </div>
-  //                <div style={{ 
-  //                  backgroundColor: '#3b82f6', 
-  //                  color: 'white', 
-  //                  padding: '8px 16px', 
-  //                  borderRadius: '20px', 
-  //                  fontSize: '14px', 
-  //                  fontWeight: '600',
-  //                  boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
-  //                }}>
-  //                  {innovations.length} Projects
-  //                </div>
-  //              </div>
-  //            </div>
-  //            <div style={{ flex: '1', overflow: 'auto', minHeight: 0 }}>
-  //              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-  //                <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f8fafc', zIndex: 1 }}>
-  //                  <tr>
-  //                    <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>#</th>
-  //                    <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Project Name</th>
-  //                    <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Comments</th>
-  //                    <th style={{ padding: '16px 28px', textAlign: 'left', fontSize: '13px', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', backgroundColor: '#f8fafc', borderBottom: '2px solid #e5e7eb' }}>Actions</th>
-  //                  </tr>
-  //                </thead>
-  //                <tbody>
-  //                  {innovations.map((innovation, index) => (
-  //                    <tr key={innovation.id} style={{ 
-  //                      transition: 'all 0.2s ease',
-  //                      ':hover': { backgroundColor: '#f8fafc' }
-  //                    }}>
-  //                      <td style={{ 
-  //                        padding: '16px 28px', 
-  //                        borderBottom: '1px solid #f1f5f9', 
-  //                        fontSize: '15px',
-  //                        fontWeight: '600',
-  //                        color: '#374151'
-  //                      }}>
-  //                        <div style={{ 
-  //                          width: '32px', 
-  //                          height: '32px', 
-  //                          borderRadius: '8px', 
-  //                          backgroundColor: '#3b82f6', 
-  //                          color: 'white', 
-  //                          display: 'flex', 
-  //                          alignItems: 'center', 
-  //                          justifyContent: 'center',
-  //                          fontSize: '14px',
-  //                          fontWeight: '700'
-  //                        }}>
-  //                          {index + 1}
-  //                        </div>
-  //                      </td>
-  //                      <td style={{ 
-  //                        padding: '16px 28px', 
-  //                        borderBottom: '1px solid #f1f5f9', 
-  //                        fontSize: '15px',
-  //                        fontWeight: '500',
-  //                        color: '#1f2937'
-  //                      }}>
-  //                        {innovation.name}
-  //                      </td>
-  //                      <td style={{ 
-  //                        padding: '16px 28px', 
-  //                        borderBottom: '1px solid #f1f5f9', 
-  //                        fontSize: '15px'
-  //                      }}>
-  //                        <span style={{ 
-  //                          backgroundColor: '#dbeafe', 
-  //                          color: '#1d4ed8', 
-  //                          padding: '6px 12px', 
-  //                          borderRadius: '20px', 
-  //                          fontSize: '13px', 
-  //                          fontWeight: '600' 
-  //                        }}>
-  //                          {innovation.comments} comments
-  //                        </span>
-  //                      </td>
-  //                      <td style={{ 
-  //                        padding: '16px 28px', 
-  //                        borderBottom: '1px solid #f1f5f9', 
-  //                        fontSize: '15px' 
-  //                      }}>
-  //                        <div style={{ display: 'flex', gap: '8px' }}>
-  //                          <button style={{ 
-  //                            width: '36px', 
-  //                            height: '36px', 
-  //                            borderRadius: '8px', 
-  //                            border: 'none', 
-  //                            cursor: 'pointer', 
-  //                            backgroundColor: '#dbeafe', 
-  //                            color: '#1d4ed8',
-  //                            display: 'flex',
-  //                            alignItems: 'center',
-  //                            justifyContent: 'center',
-  //                            fontSize: '16px',
-  //                            transition: 'all 0.2s ease',
-  //                            ':hover': { backgroundColor: '#bfdbfe' }
-  //                          }}>
-  //                            👁️
-  //                          </button>
-  //                          <button style={{ 
-  //                            width: '36px', 
-  //                            height: '36px', 
-  //                            borderRadius: '8px', 
-  //                            border: 'none', 
-  //                            cursor: 'pointer', 
-  //                            backgroundColor: '#fee2e2', 
-  //                            color: '#dc2626',
-  //                            display: 'flex',
-  //                            alignItems: 'center',
-  //                            justifyContent: 'center',
-  //                            fontSize: '16px',
-  //                            transition: 'all 0.2s ease',
-  //                            ':hover': { backgroundColor: '#fecaca' }
-  //                          }}>
-  //                            🗑️
-  //                          </button>
-  //                        </div>
-  //                      </td>
-  //                    </tr>
-  //                  ))}
-  //                </tbody>
-  //              </table>
-  //            </div>
-  //          </div>
-  //        </div>
-
-  //        {/* Fixed Announcements Section */}
-  //        <div style={{ 
-  //          backgroundColor: 'white', 
-  //          borderRadius: '16px', 
-  //          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', 
-  //          padding: '28px',
-  //          display: 'flex',
-  //          flexDirection: 'column',
-  //          height: 'fit-content',
-  //          maxHeight: '600px',
-  //          border: '1px solid rgba(0, 0, 0, 0.05)',
-  //          position: 'sticky',
-  //          top: '24px'
-  //        }}>
-  //          <div style={{ 
-  //            marginBottom: '24px', 
-  //            display: 'flex', 
-  //            justifyContent: 'space-between', 
-  //            alignItems: 'center', 
-  //            flexShrink: 0 
-  //          }}>
-  //            <div>
-  //              <div style={{ fontSize: '20px', fontWeight: '700', color: '#1a202c', marginBottom: '4px' }}>
-  //                📢 Latest Announcements
-  //              </div>
-  //              <div style={{ fontSize: '14px', color: '#6b7280' }}>
-  //                Stay updated with school news and events
-  //              </div>
-  //            </div>
-  //            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-  //              <span style={{ 
-  //                fontSize: '14px', 
-  //                backgroundColor: 'linear-gradient(135deg, #3b82f6, #2563eb)', 
-  //                background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
-  //                color: 'white', 
-  //                padding: '6px 12px', 
-  //                borderRadius: '20px',
-  //                fontWeight: '600',
-  //                boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
-  //              }}>
-  //                82 New
-  //              </span>
-  //              <button style={{ 
-  //                fontSize: '14px', 
-  //                color: '#7c3aed', 
-  //                background: 'none',
-  //                border: 'none',
-  //                cursor: 'pointer',
-  //                fontWeight: '600',
-  //                padding: '8px 12px',
-  //                borderRadius: '8px',
-  //                transition: 'all 0.2s ease',
-  //                ':hover': { backgroundColor: '#f3f4f6' }
-  //              }}>
-  //                View all →
-  //              </button>
-  //            </div>
-  //          </div>
-           
-  //          <div style={{ 
-  //            overflow: 'auto', 
-  //            maxHeight: '400px',
-  //            paddingRight: '8px'
-  //          }}>
-  //            {announcements.map((announcement) => (
-  //              <div key={announcement.id} style={{ 
-  //                padding: '20px 0', 
-  //                borderBottom: '1px solid #f1f5f9',
-  //                transition: 'all 0.2s ease',
-  //                cursor: 'pointer',
-  //                ':hover': { backgroundColor: '#f8fafc', paddingLeft: '12px', paddingRight: '12px', marginLeft: '-12px', marginRight: '-12px', borderRadius: '8px' }
-  //              }}>
-  //                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-  //                  <div style={{ 
-  //                    fontSize: '13px', 
-  //                    color: '#6b7280',
-  //                    backgroundColor: '#f3f4f6',
-  //                    padding: '4px 8px',
-  //                    borderRadius: '6px',
-  //                    fontWeight: '500'
-  //                  }}>
-  //                    📅 Tuesday 20th, 22
-  //                  </div>
-  //                  <div style={{ 
-  //                    fontSize: '12px', 
-  //                    color: '#9ca3af',
-  //                    backgroundColor: '#fef3c7',
-  //                    color: '#92400e',
-  //                    padding: '4px 8px',
-  //                    borderRadius: '6px',
-  //                    fontWeight: '500'
-  //                  }}>
-  //                    {announcement.date}
-  //                  </div>
-  //                </div>
-  //                <div style={{ 
-  //                  fontSize: '16px', 
-  //                  fontWeight: '700', 
-  //                  color: '#1f2937', 
-  //                  marginBottom: '8px',
-  //                  lineHeight: '1.3'
-  //                }}>
-  //                  {announcement.title}
-  //                </div>
-  //                <div style={{ 
-  //                  fontSize: '14px', 
-  //                  color: '#6b7280', 
-  //                  lineHeight: '1.5',
-  //                  fontWeight: '400'
-  //                }}>
-  //                  {announcement.description}
-  //                </div>
-  //              </div>
-  //            ))}
-  //          </div>
-  //        </div>
-  //      </div>
-  //   </div>
-  // );
-
-const DashboardPage = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
-
-  // Sample data matching your image
-  const latestMarks = [
-    { lesson: "Ikinyarwanda II", marks: 8.5, weight: 10, status: "PASS", comment: "EXAM" },
-    { lesson: "Ikinyarwanda II", marks: 10, weight: 10, status: "PASS", comment: "CAT" },
-    { lesson: "Entrepreneurship II", marks: 9.5, weight: 10, status: "PASS", comment: "EXAM" },
-    { lesson: "Entrepreneurship II", marks: 7.83, weight: 10, status: "PASS", comment: "CAT" },
-    { lesson: "Citizenship II", marks: 9, weight: 10, status: "PASS", comment: "EXAM" }
-  ];
-
-  return (
-    <div style={{ 
-      backgroundColor: '#f8fafc', 
-      minHeight: '100vh',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-      padding: '24px'
-    }}>
-      {/* Header */}
+    return (
       <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: '32px'
+        backgroundColor: '#f8fafc', 
+        minHeight: '100vh',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        padding: '24px'
       }}>
-        <div style={{ 
-          fontSize: '18px',
-          fontWeight: '400',
-          color: '#6b7280',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          Good Evening 👋 <span style={{ color: '#374151', fontWeight: '500' }}>IRASUBIZA872</span>
-        </div>
-      </div>
+                 {/* Header */}
+         <div style={{ 
+           display: 'flex', 
+           justifyContent: 'space-between', 
+           alignItems: 'center',
+           marginBottom: '32px'
+         }}>
+           <div style={{ 
+             fontSize: '18px',
+             fontWeight: '400',
+             color: '#6b7280',
+             display: 'flex',
+             alignItems: 'center',
+             gap: '8px'
+           }}>
+             Good Evening 👋 <span style={{ color: '#374151', fontWeight: '500' }}>{studentData.name}</span>
+           </div>
+         </div>
 
-      {/* Stats Cards */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)', 
-        gap: '16px', 
-        marginBottom: '32px' 
-      }}>
-        {/* Year 2C Card */}
+        {/* Stats Cards */}
         <div style={{ 
-          backgroundColor: 'white', 
-          padding: '24px', 
-          borderRadius: '16px', 
-          textAlign: 'center',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb'
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)', 
+          gap: '16px', 
+          marginBottom: '32px' 
         }}>
+                     {/* Current Class Card */}
+           <div style={{ 
+             backgroundColor: 'white', 
+             padding: '24px', 
+             borderRadius: '16px', 
+             textAlign: 'center',
+             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+             border: '1px solid #e5e7eb'
+           }}>
+             <div style={{ 
+               fontSize: '32px', 
+               fontWeight: '600', 
+               color: '#8b5cf6',
+               marginBottom: '8px',
+               letterSpacing: '-0.025em'
+             }}>
+               {studentData.class}
+             </div>
+             <div style={{ 
+               fontSize: '14px', 
+               color: '#9ca3af',
+               fontWeight: '400'
+             }}>
+               Current Class
+             </div>
+           </div>
+
+          {/* 15 Courses Card */}
           <div style={{ 
-            fontSize: '32px', 
-            fontWeight: '600', 
-            color: '#8b5cf6',
-            marginBottom: '8px',
-            letterSpacing: '-0.025em'
+            backgroundColor: 'white', 
+            padding: '24px', 
+            borderRadius: '16px', 
+            textAlign: 'center',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb'
           }}>
-            Year 2C
+            <div style={{ 
+              fontSize: '32px', 
+              fontWeight: '600', 
+              color: '#8b5cf6',
+              marginBottom: '8px',
+              letterSpacing: '-0.025em'
+            }}>
+              15
+            </div>
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#9ca3af',
+              fontWeight: '400'
+            }}>
+              Courses
+            </div>
           </div>
+
+          {/* 0 Discipline Cases Card */}
           <div style={{ 
-            fontSize: '14px', 
-            color: '#9ca3af',
-            fontWeight: '400'
+            backgroundColor: 'white', 
+            padding: '24px', 
+            borderRadius: '16px', 
+            textAlign: 'center',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb'
           }}>
-            Current Class
+            <div style={{ 
+              fontSize: '32px', 
+              fontWeight: '600', 
+              color: '#8b5cf6',
+              marginBottom: '8px',
+              letterSpacing: '-0.025em'
+            }}>
+              0
+            </div>
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#9ca3af',
+              fontWeight: '400'
+            }}>
+              Discipline Cases
+            </div>
+          </div>
+
+          {/* 3 Appeals Card */}
+          <div style={{ 
+            backgroundColor: 'white', 
+            padding: '24px', 
+            borderRadius: '16px', 
+            textAlign: 'center',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb'
+          }}>
+            <div style={{ 
+              fontSize: '32px', 
+              fontWeight: '600', 
+              color: '#8b5cf6',
+              marginBottom: '8px',
+              letterSpacing: '-0.025em'
+            }}>
+              3
+            </div>
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#9ca3af',
+              fontWeight: '400'
+            }}>
+              Appeals
+            </div>
+          </div>
+
+          {/* 84.99% CGPA Card */}
+          <div style={{ 
+            backgroundColor: 'white', 
+            padding: '24px', 
+            borderRadius: '16px', 
+            textAlign: 'center',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb'
+          }}>
+            <div style={{ 
+              fontSize: '32px', 
+              fontWeight: '600', 
+              color: '#8b5cf6',
+              marginBottom: '8px',
+              letterSpacing: '-0.025em'
+            }}>
+              84.99%
+            </div>
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#9ca3af',
+              fontWeight: '400'
+            }}>
+              CAT Overall (Previous Term)
+            </div>
           </div>
         </div>
 
-        {/* 15 Courses Card */}
+        {/* Main Content Grid */}
         <div style={{ 
-          backgroundColor: 'white', 
-          padding: '24px', 
-          borderRadius: '16px', 
-          textAlign: 'center',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb'
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', 
+          gap: '24px' 
         }}>
-          <div style={{ 
-            fontSize: '32px', 
-            fontWeight: '600', 
-            color: '#8b5cf6',
-            marginBottom: '8px',
-            letterSpacing: '-0.025em'
-          }}>
-            15
-          </div>
-          <div style={{ 
-            fontSize: '14px', 
-            color: '#9ca3af',
-            fontWeight: '400'
-          }}>
-            Courses
-          </div>
-        </div>
+          {/* Left Column - Latest Marks */}
+          <div>
+            {/* Latest Marks Section */}
+            <div style={{ 
+              backgroundColor: 'white', 
+              borderRadius: '16px', 
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e5e7eb',
+              marginBottom: '24px'
+            }}>
+              {/* Header */}
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                padding: '20px 24px',
+                borderBottom: '1px solid #e5e7eb'
+              }}>
+                <h3 style={{ 
+                  fontSize: '18px', 
+                  fontWeight: '500', 
+                  color: '#374151',
+                  margin: '0'
+                }}>
+                  Latest Marks
+                </h3>
+                <button style={{
+                  color: '#6366f1',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  textDecoration: 'none'
+                }}>
+                  View more
+                </button>
+              </div>
 
-        {/* 0 Discipline Cases Card */}
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '24px', 
-          borderRadius: '16px', 
-          textAlign: 'center',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb'
-        }}>
-          <div style={{ 
-            fontSize: '32px', 
-            fontWeight: '600', 
-            color: '#8b5cf6',
-            marginBottom: '8px',
-            letterSpacing: '-0.025em'
-          }}>
-            0
-          </div>
-          <div style={{ 
-            fontSize: '14px', 
-            color: '#9ca3af',
-            fontWeight: '400'
-          }}>
-            Discipline Cases
-          </div>
-        </div>
+              {/* Table */}
+              <div style={{ overflow: 'auto' }}>
+                <table style={{ 
+                  width: '100%', 
+                  borderCollapse: 'collapse'
+                }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f9fafb' }}>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '500', 
+                        color: '#6b7280',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        Lesson
+                      </th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '500', 
+                        color: '#6b7280',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        Marks
+                      </th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '500', 
+                        color: '#6b7280',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        Weight
+                      </th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '500', 
+                        color: '#6b7280',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        Status
+                      </th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '500', 
+                        color: '#6b7280',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        Comment
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {latestMarks.map((mark, index) => (
+                      <tr key={index} style={{ 
+                        borderBottom: index < latestMarks.length - 1 ? '1px solid #f3f4f6' : 'none' 
+                      }}>
+                        <td style={{ 
+                          padding: '16px 24px', 
+                          fontSize: '14px',
+                          color: '#374151',
+                          fontWeight: '400'
+                        }}>
+                          {mark.lesson}
+                        </td>
+                        <td style={{ 
+                          padding: '16px 24px', 
+                          fontSize: '14px',
+                          color: '#374151',
+                          fontWeight: '500'
+                        }}>
+                          {mark.marks}
+                        </td>
+                        <td style={{ 
+                          padding: '16px 24px', 
+                          fontSize: '14px',
+                          color: '#6b7280'
+                        }}>
+                          {mark.weight}
+                        </td>
+                        <td style={{ 
+                          padding: '16px 24px', 
+                          fontSize: '14px',
+                          color: '#059669',
+                          fontWeight: '500'
+                        }}>
+                          {mark.status}
+                        </td>
+                        <td style={{ 
+                          padding: '16px 24px', 
+                          fontSize: '14px',
+                          color: '#6b7280'
+                        }}>
+                          {mark.comment}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-        {/* 3 Appeals Card */}
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '24px', 
-          borderRadius: '16px', 
-          textAlign: 'center',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb'
-        }}>
-          <div style={{ 
-            fontSize: '32px', 
-            fontWeight: '600', 
-            color: '#8b5cf6',
-            marginBottom: '8px',
-            letterSpacing: '-0.025em'
-          }}>
-            3
-          </div>
-          <div style={{ 
-            fontSize: '14px', 
-            color: '#9ca3af',
-            fontWeight: '400'
-          }}>
-            Appeals
-          </div>
-        </div>
+            {/* Discipline Cases Section */}
+            <div style={{ 
+              backgroundColor: 'white', 
+              borderRadius: '16px', 
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e5e7eb'
+            }}>
+              {/* Header */}
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                padding: '20px 24px',
+                borderBottom: '1px solid #e5e7eb'
+              }}>
+                <h3 style={{ 
+                  fontSize: '18px', 
+                  fontWeight: '500', 
+                  color: '#374151',
+                  margin: '0'
+                }}>
+                  Discipline Cases
+                </h3>
+                <button style={{
+                  color: '#6366f1',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  textDecoration: 'none'
+                }}>
+                  View more
+                </button>
+              </div>
 
-        {/* 84.99% CGPA Card */}
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '24px', 
-          borderRadius: '16px', 
-          textAlign: 'center',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb'
-        }}>
-          <div style={{ 
-            fontSize: '32px', 
-            fontWeight: '600', 
-            color: '#8b5cf6',
-            marginBottom: '8px',
-            letterSpacing: '-0.025em'
-          }}>
-            84.99%
+              {/* Empty State */}
+              <div style={{ 
+                padding: '80px 24px',
+                textAlign: 'center',
+                color: '#6b7280'
+              }}>
+                <div style={{ 
+                  fontSize: '16px', 
+                  fontWeight: '500' 
+                }}>
+                  No Discipline Cases So Far
+                </div>
+              </div>
+            </div>
           </div>
-          <div style={{ 
-            fontSize: '14px', 
-            color: '#9ca3af',
-            fontWeight: '400'
-          }}>
-            CAT Overall (Previous Term)
-          </div>
-        </div>
-      </div>
 
-      {/* Main Content Grid */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', 
-        gap: '24px' 
-      }}>
-        {/* Left Column - Latest Marks */}
-        <div>
-          {/* Latest Marks Section */}
+          {/* Right Column - Announcements */}
           <div style={{ 
             backgroundColor: 'white', 
             borderRadius: '16px', 
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
             border: '1px solid #e5e7eb',
-            marginBottom: '24px'
+            height: 'fit-content'
           }}>
             {/* Header */}
             <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
               padding: '20px 24px',
-              borderBottom: '1px solid #e5e7eb'
-            }}>
-              <h3 style={{ 
-                fontSize: '18px', 
-                fontWeight: '500', 
-                color: '#374151',
-                margin: '0'
-              }}>
-                Latest Marks
-              </h3>
-              <button style={{
-                color: '#6366f1',
-                background: 'none',
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                textDecoration: 'none'
-              }}>
-                View more
-              </button>
-            </div>
-
-            {/* Table */}
-            <div style={{ overflow: 'auto' }}>
-              <table style={{ 
-                width: '100%', 
-                borderCollapse: 'collapse'
-              }}>
-                <thead>
-                  <tr style={{ backgroundColor: '#f9fafb' }}>
-                    <th style={{ 
-                      padding: '12px 24px', 
-                      textAlign: 'left', 
-                      fontSize: '12px', 
-                      fontWeight: '500', 
-                      color: '#6b7280',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
-                    }}>
-                      Lesson
-                    </th>
-                    <th style={{ 
-                      padding: '12px 24px', 
-                      textAlign: 'left', 
-                      fontSize: '12px', 
-                      fontWeight: '500', 
-                      color: '#6b7280',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
-                    }}>
-                      Marks
-                    </th>
-                    <th style={{ 
-                      padding: '12px 24px', 
-                      textAlign: 'left', 
-                      fontSize: '12px', 
-                      fontWeight: '500', 
-                      color: '#6b7280',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
-                    }}>
-                      Weight
-                    </th>
-                    <th style={{ 
-                      padding: '12px 24px', 
-                      textAlign: 'left', 
-                      fontSize: '12px', 
-                      fontWeight: '500', 
-                      color: '#6b7280',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
-                    }}>
-                      Status
-                    </th>
-                    <th style={{ 
-                      padding: '12px 24px', 
-                      textAlign: 'left', 
-                      fontSize: '12px', 
-                      fontWeight: '500', 
-                      color: '#6b7280',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
-                    }}>
-                      Comment
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {latestMarks.map((mark, index) => (
-                    <tr key={index} style={{ 
-                      borderBottom: index < latestMarks.length - 1 ? '1px solid #f3f4f6' : 'none' 
-                    }}>
-                      <td style={{ 
-                        padding: '16px 24px', 
-                        fontSize: '14px',
-                        color: '#374151',
-                        fontWeight: '400'
-                      }}>
-                        {mark.lesson}
-                      </td>
-                      <td style={{ 
-                        padding: '16px 24px', 
-                        fontSize: '14px',
-                        color: '#374151',
-                        fontWeight: '500'
-                      }}>
-                        {mark.marks}
-                      </td>
-                      <td style={{ 
-                        padding: '16px 24px', 
-                        fontSize: '14px',
-                        color: '#6b7280'
-                      }}>
-                        {mark.weight}
-                      </td>
-                      <td style={{ 
-                        padding: '16px 24px', 
-                        fontSize: '14px',
-                        color: '#059669',
-                        fontWeight: '500'
-                      }}>
-                        {mark.status}
-                      </td>
-                      <td style={{ 
-                        padding: '16px 24px', 
-                        fontSize: '14px',
-                        color: '#6b7280'
-                      }}>
-                        {mark.comment}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Discipline Cases Section */}
-          <div style={{ 
-            backgroundColor: 'white', 
-            borderRadius: '16px', 
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #e5e7eb'
-          }}>
-            {/* Header */}
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              padding: '20px 24px',
-              borderBottom: '1px solid #e5e7eb'
-            }}>
-              <h3 style={{ 
-                fontSize: '18px', 
-                fontWeight: '500', 
-                color: '#374151',
-                margin: '0'
-              }}>
-                Discipline Cases
-              </h3>
-              <button style={{
-                color: '#6366f1',
-                background: 'none',
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                textDecoration: 'none'
-              }}>
-                View more
-              </button>
-            </div>
-
-            {/* Empty State */}
-            <div style={{ 
-              padding: '80px 24px',
-              textAlign: 'center',
-              color: '#6b7280'
-            }}>
-              <div style={{ 
-                fontSize: '16px', 
-                fontWeight: '500' 
-              }}>
-                No Discipline Cases So Far
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column - Announcements */}
-        <div style={{ 
-          backgroundColor: 'white', 
-          borderRadius: '16px', 
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb',
-          height: 'fit-content'
-        }}>
-          {/* Header */}
-          <div style={{ 
-            padding: '20px 24px',
-            borderBottom: '1px solid #e5e7eb',
-            textAlign: 'center'
-          }}>
-            <h3 style={{ 
-              fontSize: '18px', 
-              fontWeight: '500', 
-              color: '#374151',
-              margin: '0 0 16px 0'
-            }}>
-              Announcements
-            </h3>
-            
-            {/* Illustration */}
-            <div style={{ 
-              display: 'flex',
-              justifyContent: 'center',
-              marginBottom: '16px'
-            }}>
-              <div style={{
-                width: '120px',
-                height: '120px',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                borderRadius: '60px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontSize: '48px'
-              }}>
-                👩‍💼
-              </div>
-            </div>
-
-            <div style={{ 
-              fontSize: '14px', 
-              color: '#6b7280',
-              lineHeight: '1.5',
+              borderBottom: '1px solid #e5e7eb',
               textAlign: 'center'
             }}>
-              The Announcements feature is under development. Thank you for your patience!
+              <h3 style={{ 
+                fontSize: '18px', 
+                fontWeight: '500', 
+                color: '#374151',
+                margin: '0 0 16px 0'
+              }}>
+                Announcements
+              </h3>
+              
+              {/* Illustration */}
+              <div style={{ 
+                display: 'flex',
+                justifyContent: 'center',
+                marginBottom: '16px'
+              }}>
+                <div style={{
+                  width: '120px',
+                  height: '120px',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  borderRadius: '60px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  fontSize: '48px'
+                }}>
+                  👩‍💼
+                </div>
+              </div>
+
+              <div style={{ 
+                fontSize: '14px', 
+                color: '#6b7280',
+                lineHeight: '1.5',
+                textAlign: 'center'
+              }}>
+                The Announcements feature is under development. Thank you for your patience!
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
   // Report Cards Page
   const ReportCardsPage = () => (
@@ -1871,6 +1439,722 @@ const DashboardPage = () => {
     </div>
   );
 
+  // Attendance Page
+  const AttendancePage = () => (
+    <div>
+      <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
+        Attendance Record
+      </h1>
+      
+      {/* Stats Cards */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', 
+        gap: '16px', 
+        marginBottom: '32px' 
+      }}>
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#10b981', marginBottom: '8px' }}>
+            {studentData.attendance.filter(a => a.status === 'Present').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Present</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#f59e0b', marginBottom: '8px' }}>
+            {studentData.attendance.filter(a => a.status === 'Late').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Late</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#ef4444', marginBottom: '8px' }}>
+            {studentData.attendance.filter(a => a.status === 'Absent').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Absent</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#8b5cf6', marginBottom: '8px' }}>
+            {studentData.attendance.length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Total Days</div>
+        </div>
+      </div>
+
+      {/* Attendance Table */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        borderRadius: '16px', 
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          padding: '20px 24px',
+          borderBottom: '1px solid #e5e7eb',
+          backgroundColor: '#f9fafb'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', margin: '0' }}>
+            Recent Attendance
+          </h3>
+        </div>
+        
+        <div style={{ overflow: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f9fafb' }}>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Date</th>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Subject</th>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Time</th>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {studentData.attendance.map((record, index) => (
+                <tr key={index} style={{ borderBottom: index < studentData.attendance.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                  <td style={{ padding: '16px 24px', fontSize: '14px', color: '#374151' }}>
+                    {new Date(record.date).toLocaleDateString()}
+                  </td>
+                  <td style={{ padding: '16px 24px', fontSize: '14px', color: '#374151', fontWeight: '500' }}>
+                    {record.subject}
+                  </td>
+                  <td style={{ padding: '16px 24px', fontSize: '14px', color: '#6b7280' }}>
+                    {record.time}
+                  </td>
+                  <td style={{ padding: '16px 24px', fontSize: '14px' }}>
+                    <span style={{
+                      padding: '4px 12px',
+                      borderRadius: '20px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      backgroundColor: record.status === 'Present' ? '#d1fae5' : 
+                                   record.status === 'Late' ? '#fef3c7' : '#fee2e2',
+                      color: record.status === 'Present' ? '#065f46' : 
+                            record.status === 'Late' ? '#92400e' : '#dc2626'
+                    }}>
+                      {record.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Marks Page
+  const MarksPage = () => (
+    <div>
+      <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
+        Academic Marks
+      </h1>
+      
+      {/* Performance Summary */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        padding: '24px', 
+        borderRadius: '16px', 
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb',
+        marginBottom: '24px'
+      }}>
+        <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', marginBottom: '16px' }}>
+          Performance Summary
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '16px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '24px', fontWeight: '700', color: '#10b981' }}>
+              {studentData.marks.filter(m => m.comment === 'EXAM').length}
+            </div>
+            <div style={{ fontSize: '14px', color: '#6b7280' }}>Exams Taken</div>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '24px', fontWeight: '700', color: '#3b82f6' }}>
+              {studentData.marks.filter(m => m.comment === 'CAT').length}
+            </div>
+            <div style={{ fontSize: '14px', color: '#6b7280' }}>CATs Taken</div>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '24px', fontWeight: '700', color: '#8b5cf6' }}>
+              {studentData.marks.filter(m => m.status === 'PASS').length}
+            </div>
+            <div style={{ fontSize: '14px', color: '#6b7280' }}>Passed</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Marks Table */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        borderRadius: '16px', 
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          padding: '20px 24px',
+          borderBottom: '1px solid #e5e7eb',
+          backgroundColor: '#f9fafb'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', margin: '0' }}>
+            All Marks
+          </h3>
+        </div>
+        
+        <div style={{ overflow: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f9fafb' }}>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Subject</th>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Marks</th>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Weight</th>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Type</th>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Term</th>
+                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase' }}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {studentData.marks.map((mark, index) => (
+                <tr key={index} style={{ borderBottom: index < studentData.marks.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                  <td style={{ padding: '16px 24px', fontSize: '14px', color: '#374151', fontWeight: '500' }}>
+                    {mark.lesson}
+                  </td>
+                  <td style={{ padding: '16px 24px', fontSize: '14px', color: '#374151', fontWeight: '600' }}>
+                    {mark.marks}/10
+                  </td>
+                  <td style={{ padding: '16px 24px', fontSize: '14px', color: '#6b7280' }}>
+                    {mark.weight}
+                  </td>
+                  <td style={{ padding: '16px 24px', fontSize: '14px', color: '#6b7280' }}>
+                    {mark.comment}
+                  </td>
+                  <td style={{ padding: '16px 24px', fontSize: '14px', color: '#6b7280' }}>
+                    {mark.term}
+                  </td>
+                  <td style={{ padding: '16px 24px', fontSize: '14px' }}>
+                    <span style={{
+                      padding: '4px 12px',
+                      borderRadius: '20px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      backgroundColor: mark.status === 'PASS' ? '#d1fae5' : '#fee2e2',
+                      color: mark.status === 'PASS' ? '#065f46' : '#dc2626'
+                    }}>
+                      {mark.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Assignments Page
+  const AssignmentsPage = () => (
+    <div>
+      <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
+        Assignments
+      </h1>
+      
+      {/* Assignment Stats */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+        gap: '16px', 
+        marginBottom: '32px' 
+      }}>
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#10b981', marginBottom: '8px' }}>
+            {studentData.assignments.filter(a => a.status === 'Submitted').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Submitted</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#f59e0b', marginBottom: '8px' }}>
+            {studentData.assignments.filter(a => a.status === 'Pending').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Pending</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#8b5cf6', marginBottom: '8px' }}>
+            {studentData.assignments.length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Total</div>
+        </div>
+      </div>
+
+      {/* Assignments List */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        borderRadius: '16px', 
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          padding: '20px 24px',
+          borderBottom: '1px solid #e5e7eb',
+          backgroundColor: '#f9fafb'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', margin: '0' }}>
+            Assignment Details
+          </h3>
+        </div>
+        
+        <div style={{ padding: '24px' }}>
+          {studentData.assignments.map((assignment, index) => (
+            <div key={assignment.id} style={{ 
+              padding: '20px',
+              border: '1px solid #e5e7eb',
+              borderRadius: '12px',
+              marginBottom: index < studentData.assignments.length - 1 ? '16px' : '0',
+              backgroundColor: '#f9fafb'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#374151', margin: '0' }}>
+                  {assignment.title}
+                </h4>
+                <span style={{
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  backgroundColor: assignment.status === 'Submitted' ? '#d1fae5' : '#fef3c7',
+                  color: assignment.status === 'Submitted' ? '#065f46' : '#92400e'
+                }}>
+                  {assignment.status}
+                </span>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '16px', marginBottom: '12px' }}>
+                <div>
+                  <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Subject:</span>
+                  <div style={{ fontSize: '14px', color: '#374151' }}>{assignment.subject}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Due Date:</span>
+                  <div style={{ fontSize: '14px', color: '#374151' }}>{assignment.dueDate}</div>
+                </div>
+                {assignment.grade && (
+                  <div>
+                    <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Grade:</span>
+                    <div style={{ fontSize: '14px', color: '#10b981', fontWeight: '600' }}>{assignment.grade}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Exams Page
+  const ExamsPage = () => (
+    <div>
+      <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
+        Exams Schedule
+      </h1>
+      
+      {/* Exam Stats */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+        gap: '16px', 
+        marginBottom: '32px' 
+      }}>
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#3b82f6', marginBottom: '8px' }}>
+            {studentData.exams.filter(e => e.status === 'Scheduled').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Upcoming</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#8b5cf6', marginBottom: '8px' }}>
+            {studentData.exams.length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Total Exams</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#10b981', marginBottom: '8px' }}>
+            {studentData.exams.reduce((total, exam) => {
+              const duration = parseInt(exam.duration.split(' ')[0]);
+              return total + duration;
+            }, 0)}
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Total Hours</div>
+        </div>
+      </div>
+
+      {/* Exams List */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        borderRadius: '16px', 
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          padding: '20px 24px',
+          borderBottom: '1px solid #e5e7eb',
+          backgroundColor: '#f9fafb'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', margin: '0' }}>
+            Exam Details
+          </h3>
+        </div>
+        
+        <div style={{ padding: '24px' }}>
+          {studentData.exams.map((exam, index) => (
+            <div key={exam.id} style={{ 
+              padding: '20px',
+              border: '1px solid #e5e7eb',
+              borderRadius: '12px',
+              marginBottom: index < studentData.exams.length - 1 ? '16px' : '0',
+              backgroundColor: '#f9fafb'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#374151', margin: '0' }}>
+                  {exam.title}
+                </h4>
+                <span style={{
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  backgroundColor: '#dbeafe',
+                  color: '#1d4ed8'
+                }}>
+                  {exam.status}
+                </span>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '16px' }}>
+                <div>
+                  <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Subject:</span>
+                  <div style={{ fontSize: '14px', color: '#374151' }}>{exam.subject}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Date:</span>
+                  <div style={{ fontSize: '14px', color: '#374151' }}>{exam.date}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500' }}>Duration:</span>
+                  <div style={{ fontSize: '14px', color: '#374151' }}>{exam.duration}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Timetable Page
+  const TimetablePage = () => (
+    <div>
+      <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
+        Class Timetable
+      </h1>
+      
+      {/* Timetable */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        borderRadius: '16px', 
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          padding: '20px 24px',
+          borderBottom: '1px solid #e5e7eb',
+          backgroundColor: '#f9fafb'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', margin: '0' }}>
+            Weekly Schedule
+          </h3>
+        </div>
+        
+        <div style={{ padding: '24px' }}>
+          {studentData.timetable.map((day, dayIndex) => (
+            <div key={dayIndex} style={{ marginBottom: dayIndex < studentData.timetable.length - 1 ? '24px' : '0' }}>
+              <h4 style={{ 
+                fontSize: '16px', 
+                fontWeight: '600', 
+                color: '#374151', 
+                marginBottom: '16px',
+                padding: '12px 16px',
+                backgroundColor: '#f3f4f6',
+                borderRadius: '8px'
+              }}>
+                {day.day}
+              </h4>
+              
+              <div style={{ display: 'grid', gap: '12px' }}>
+                {day.subjects.map((subject, subjectIndex) => (
+                  <div key={subjectIndex} style={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '16px',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    backgroundColor: '#f9fafb'
+                  }}>
+                    <div style={{ 
+                      width: '80px',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#6b7280'
+                    }}>
+                      {subject.time}
+                    </div>
+                    <div style={{ 
+                      flex: '1',
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      color: '#374151'
+                    }}>
+                      {subject.subject}
+                    </div>
+                    <div style={{ 
+                      fontSize: '14px',
+                      color: '#6b7280',
+                      backgroundColor: '#e5e7eb',
+                      padding: '4px 12px',
+                      borderRadius: '6px'
+                    }}>
+                      {subject.room}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Communications Page
+  const CommunicationsPage = () => (
+    <div>
+      <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1a202c', marginBottom: '24px' }}>
+        Communications
+      </h1>
+      
+      {/* Communication Stats */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+        gap: '16px', 
+        marginBottom: '32px' 
+      }}>
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#3b82f6', marginBottom: '8px' }}>
+            12
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Messages</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#10b981', marginBottom: '8px' }}>
+            8
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Read</div>
+        </div>
+        
+        <div style={{ 
+          backgroundColor: 'white', 
+          padding: '24px', 
+          borderRadius: '16px', 
+          textAlign: 'center',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontSize: '32px', fontWeight: '600', color: '#f59e0b', marginBottom: '8px' }}>
+            4
+          </div>
+          <div style={{ fontSize: '14px', color: '#9ca3af' }}>Unread</div>
+        </div>
+      </div>
+
+      {/* Messages List */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        borderRadius: '16px', 
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          padding: '20px 24px',
+          borderBottom: '1px solid #e5e7eb',
+          backgroundColor: '#f9fafb'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', margin: '0' }}>
+            Recent Messages
+          </h3>
+        </div>
+        
+        <div style={{ padding: '24px' }}>
+          <div style={{ 
+            padding: '20px',
+            border: '1px solid #e5e7eb',
+            borderRadius: '12px',
+            marginBottom: '16px',
+            backgroundColor: '#f9fafb'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#374151', margin: '0' }}>
+                Assignment Reminder
+              </h4>
+              <span style={{
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '12px',
+                fontWeight: '600',
+                backgroundColor: '#fee2e2',
+                color: '#dc2626'
+              }}>
+                Unread
+              </span>
+            </div>
+            <p style={{ fontSize: '14px', color: '#6b7280', margin: '0 0 12px 0' }}>
+              Reminder: Your Mathematics assignment is due tomorrow. Please ensure it's submitted on time.
+            </p>
+            <div style={{ fontSize: '12px', color: '#9ca3af' }}>
+              From: Dr. Sarah Mukamana • 2 hours ago
+            </div>
+          </div>
+          
+          <div style={{ 
+            padding: '20px',
+            border: '1px solid #e5e7eb',
+            borderRadius: '12px',
+            marginBottom: '16px',
+            backgroundColor: '#f9fafb'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#374151', margin: '0' }}>
+                Exam Schedule Update
+              </h4>
+              <span style={{
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '12px',
+                fontWeight: '600',
+                backgroundColor: '#d1fae5',
+                color: '#065f46'
+              }}>
+                Read
+              </span>
+            </div>
+            <p style={{ fontSize: '14px', color: '#6b7280', margin: '0 0 12px 0' }}>
+              The Physics exam has been rescheduled to next Friday. Please update your calendar accordingly.
+            </p>
+            <div style={{ fontSize: '12px', color: '#9ca3af' }}>
+              From: Admin • 1 day ago
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   // Profile Page
   const ProfilePage = () => (
     <div>
@@ -1893,12 +2177,30 @@ const DashboardPage = () => {
     switch (currentPage) {
       case 'dashboard':
         return <DashboardPage />;
+      case 'students':
+        return <div style={{ padding: '24px' }}><h1>Students</h1><p>This page is not available for students.</p></div>;
+      case 'marks':
+        return <MarksPage />;
       case 'report-cards':
         return <ReportCardsPage />;
       case 'projects':
         return <ProjectsPage />;
       case 'opportunities':
         return <OpportunitiesPage />;
+      case 'attendance':
+        return <AttendancePage />;
+      case 'assignments':
+        return <AssignmentsPage />;
+      case 'exams':
+        return <ExamsPage />;
+      case 'timetable':
+        return <TimetablePage />;
+      case 'communications':
+        return <CommunicationsPage />;
+      case 'analytics':
+        return <div style={{ padding: '24px' }}><h1>Analytics</h1><p>This page is not available for students.</p></div>;
+      case 'settings':
+        return <div style={{ padding: '24px' }}><h1>Settings</h1><p>This page is not available for students.</p></div>;
       case 'publish':
         return <PublishProjectPage />;
       case 'profile':
@@ -1984,7 +2286,28 @@ const DashboardPage = () => {
               />
             </div>
           </div>
-          <div style={profileStyle}>B</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>{studentData.name}</div>
+              <div style={{ fontSize: '12px', color: '#6b7280' }}>{studentData.studentCode}</div>
+            </div>
+            <div style={profileStyle}>{studentData.name.charAt(0)}</div>
+            <button
+              onClick={logout}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#ef4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer'
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         {/* Content */}
