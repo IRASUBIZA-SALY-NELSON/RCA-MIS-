@@ -1,5 +1,6 @@
 // Minimal fetch-based API client for MIS
-const API_BASE_URL = import.meta?.env?.VITE_API_URL || 'http://localhost:8080/api';
+// Use same-origin '/api' by default so requests go to /api/... (works in prod and with Vite proxy in dev)
+const API_BASE_URL = import.meta?.env?.VITE_API_URL || '/api';
 
 const readAuth = () => {
 	try {

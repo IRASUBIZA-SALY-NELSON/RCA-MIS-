@@ -168,10 +168,10 @@ const ReportCard = () => {
         <div style={leftHeaderStyle}>
           <div style={{ fontWeight: 'bold', fontSize: '14px' }}>REPUBLIC OF RWANDA</div>
           <div style={{ fontWeight: 'bold', fontSize: '14px' }}>MINISTRY OF EDUCATION</div>
-          <div style={{ fontWeight: 'bold', fontSize: '16px', marginTop: '5px' }}>RWANDA CODING ACADEMY</div>
-          <div style={logoStyle}>RCA</div>
-          <div>Telephone: (+250) 788548000</div>
-          <div>Email: papiasni@gmail.com</div>
+          <div style={{ fontWeight: 'bold', fontSize: '16px', marginTop: '5px' }}>EAGLE SECONDARY SCHOOL</div>
+          <div style={logoStyle}>EAGLE</div>
+          <div>Telephone: (+250) 793 011 614</div>
+          <div>Email: toohoteagle@gmail.com</div>
         </div>
         <div style={rightHeaderStyle}>
           <div><strong>Academic Year:</strong> {reportData.academicYear}</div>

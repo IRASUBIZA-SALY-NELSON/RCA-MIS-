@@ -243,7 +243,7 @@ const Student = () => {
     student: "Saly Nelson",
     faculty: "Shema Samuel",
     class: "Year One - Term II",
-    school: "Beacon Coding Academy, NY, United States",
+    school: "Eagle Secondary School, NY, United States",
     grade: "8th Grade",
     teacher: "Eddy",
     term: "Academic Year 2H - 2P ( Y-1 )",

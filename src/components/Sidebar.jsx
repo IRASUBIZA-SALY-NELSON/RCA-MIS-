@@ -173,9 +173,9 @@ const Sidebar = ({ currentPage, onPageChange, isOpen, onToggle, userRole = 'stud
           <div style={logoContentStyle}>
             <div style={logoIconStyle}>{'</>'}</div>
             <span style={logoTextStyle}>
-              Rwanda<br />
-              Coding<br />
-              Academy
+              EAGLE<br />
+              SECONDARY<br />
+              SCHOOL
             </span>
           </div>
           <button 
