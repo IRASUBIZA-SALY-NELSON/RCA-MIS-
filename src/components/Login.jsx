@@ -43,10 +43,7 @@ const Login = () => {
     setIsLoading(true);
     
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const result = login(email, password);
+      const result = await login(email, password, rememberMe);
       
       if (result.success) {
         const role = result.user.role;

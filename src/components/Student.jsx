@@ -2309,10 +2309,12 @@ const Student = () => {
     <div style={containerStyle}>
       {/* Sidebar */}
       <Sidebar 
-        currentPage={currentPage} 
-        setCurrentPage={setCurrentPage} 
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
         isOpen={sidebarOpen}
-        toggleSidebar={toggleSidebar}
+        onToggle={toggleSidebar}
+        userRole="student"
+        isMobile={isMobile}
       />
 
              {/* Main Content */}

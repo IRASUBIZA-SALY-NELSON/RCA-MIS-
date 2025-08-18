@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authApi } from '../services/api';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -61,13 +62,15 @@ const ForgotPassword = () => {
     }
 
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await authApi.forgotPassword(email);
       showToast('Reset email sent successfully! Check your inbox.', 'success');
       setCurrentStep(2);
-    }, 1500);
+    } catch (e) {
+      showToast(e.message || 'Failed to send reset email', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Step 2: OTP Verification
@@ -85,13 +88,17 @@ const ForgotPassword = () => {
     }
 
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const ok = await authApi.verifyOtp(email, otp);
+      const success = ok === true || ok === 'true';
+      if (!success) throw new Error('Invalid OTP');
       showToast('OTP verified successfully!', 'success');
       setCurrentStep(3);
-    }, 1500);
+    } catch (e) {
+      showToast(e.message || 'Failed to verify OTP', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handle OTP input change with better validation
@@ -160,17 +167,17 @@ const ForgotPassword = () => {
     }
 
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // In this flow we expect backend to have issued a resetToken via email link.
+      // For OTP-only flows, you may use the OTP as token if backend supports it.
+      await authApi.resetPassword(otp, newPassword);
       showToast('Password updated successfully! Redirecting to login...', 'success');
-      
-      // Redirect to login after 2 seconds
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
-    }, 1500);
+      setTimeout(() => navigate('/'), 1500);
+    } catch (e) {
+      showToast(e.message || 'Failed to reset password', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Get password strength indicator
@@ -198,8 +205,13 @@ const ForgotPassword = () => {
   const passwordStrength = getPasswordStrength();
 
   // Resend OTP function
-  const handleResendOtp = () => {
-    showToast('New OTP sent to your email', 'success');
+  const handleResendOtp = async () => {
+    try {
+      await authApi.forgotPassword(email);
+      showToast('New OTP sent to your email', 'success');
+    } catch (e) {
+      showToast(e.message || 'Failed to resend OTP', 'error');
+    }
   };
 
   // Go back to previous step

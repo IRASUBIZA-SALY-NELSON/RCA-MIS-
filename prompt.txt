@@ -1,0 +1,418 @@
+# 🚀 **COMPREHENSIVE BACKEND DEVELOPMENT PROMPT FOR RCA MIS SYSTEM**
+
+## **Project Overview**
+You are tasked with developing a complete backend system for a **Rwanda Coding Academy Management Information System (RCA MIS)** using **Spring Boot** and **PostgreSQL**. This is a comprehensive school management system that handles students, teachers, administrators, parents, and all academic operations.
+
+## **Technology Stack Requirements**
+- **Backend Framework**: Spring Boot 3.x with Java 17+
+- **Database**: PostgreSQL 15+
+- **Security**: Spring Security with JWT authentication
+- **API Documentation**: OpenAPI 3.0 (Swagger)
+- **Build Tool**: Maven
+- **Testing**: JUnit 5, Mockito
+- **Validation**: Bean Validation (Hibernate Validator)
+- **Database Migration**: Flyway or Liquibase
+- **Logging**: SLF4J with Logback
+- **Exception Handling**: Global exception handler with proper error responses
+
+## **Database Design Requirements**
+Create a comprehensive PostgreSQL database with the following entities and relationships:
+
+### **Core User Management**
+- **Users** (id, email, password_hash, role, status, created_at, updated_at)
+- **User_Profiles** (id, user_id, first_name, last_name, phone, address, profile_picture, date_of_birth, gender)
+- **Roles** (id, name, description, permissions)
+- **User_Roles** (user_id, role_id)
+
+### **Academic Structure**
+- **Academic_Years** (id, name, start_date, end_date, is_active, status)
+- **Terms** (id, academic_year_id, name, start_date, end_date, is_active)
+- **Classes** (id, name, level, academic_year_id, class_teacher_id, max_students, current_students)
+- **Subjects** (id, name, code, category, description, credits, is_active)
+- **Class_Subjects** (class_id, subject_id, teacher_id)
+
+### **Student Management**
+- **Students** (id, user_id, student_code, class_id, admission_date, parent_id, guardian_id, status)
+- **Student_Academic_Records** (id, student_id, academic_year_id, term_id, class_id, final_grade, rank, status)
+- **Student_Attendance** (id, student_id, subject_id, class_id, date, status, time_in, time_out, remarks)
+- **Student_Projects** (id, student_id, title, description, github_link, website_link, tags, status, submitted_date)
+
+### **Teacher Management**
+- **Teachers** (id, user_id, employee_id, qualification, experience_years, specialization, hire_date, status)
+- **Teacher_Subjects** (teacher_id, subject_id, is_primary)
+- **Teacher_Classes** (teacher_id, class_id, academic_year_id)
+
+### **Parent/Guardian Management**
+- **Parents** (id, user_id, relationship, occupation, employer, emergency_contact)
+- **Guardians** (id, user_id, relationship, contact_info, address)
+- **Student_Parents** (student_id, parent_id, relationship_type)
+
+### **Academic Assessment**
+- **Assessments** (id, name, type, subject_id, class_id, term_id, total_marks, weight, due_date, instructions)
+- **Student_Marks** (id, student_id, assessment_id, marks_obtained, remarks, graded_by, graded_date)
+- **Grade_Scales** (id, name, min_percentage, max_percentage, grade, description)
+
+### **Communication & Notifications**
+- **Messages** (id, sender_id, recipient_id, subject, content, message_type, priority, status, sent_date, read_date)
+- **Notifications** (id, user_id, title, message, type, is_read, created_at)
+- **Announcements** (id, title, content, target_audience, start_date, end_date, created_by, status)
+
+### **Timetable Management**
+- **Timetable_Slots** (id, class_id, subject_id, teacher_id, day_of_week, start_time, end_time, room, is_active)
+- **Timetable_Exceptions** (id, slot_id, exception_date, reason, substitute_teacher_id)
+
+### **Reports & Analytics**
+- **Report_Cards** (id, student_id, academic_year_id, term_id, class_id, generated_date, status)
+- **Performance_Reports** (id, class_id, subject_id, term_id, report_type, generated_date, data_json)
+- **Attendance_Reports** (id, class_id, date, total_students, present_count, absent_count, late_count)
+
+### **System Configuration**
+- **System_Settings** (id, setting_key, setting_value, description, category)
+- **Audit_Logs** (id, user_id, action, entity_type, entity_id, old_values, new_values, timestamp, ip_address)
+
+## **API Endpoints Requirements**
+
+### **1. Authentication & Authorization APIs**
+```
+POST   /api/auth/login
+POST   /api/auth/register
+POST   /api/auth/refresh-token
+POST   /api/auth/logout
+POST   /api/auth/forgot-password
+POST   /api/auth/reset-password
+POST   /api/auth/verify-otp
+POST   /api/auth/change-password
+GET    /api/auth/profile
+PUT    /api/auth/profile
+POST   /api/auth/upload-profile-picture
+```
+
+### **2. User Management APIs**
+```
+GET    /api/users
+GET    /api/users/{id}
+POST   /api/users
+PUT    /api/users/{id}
+DELETE /api/users/{id}
+GET    /api/users/search
+GET    /api/users/by-role/{role}
+PUT    /api/users/{id}/status
+POST   /api/users/bulk-import
+GET    /api/users/export
+```
+
+### **3. Student Management APIs**
+```
+GET    /api/students
+GET    /api/students/{id}
+POST   /api/students
+PUT    /api/students/{id}
+DELETE /api/students/{id}
+GET    /api/students/by-class/{classId}
+GET    /api/students/search
+GET    /api/students/{id}/academic-record
+GET    /api/students/{id}/attendance
+GET    /api/students/{id}/marks
+GET    /api/students/{id}/projects
+POST   /api/students/{id}/projects
+PUT    /api/students/{id}/projects/{projectId}
+DELETE /api/students/{id}/projects/{projectId}
+GET    /api/students/{id}/timetable
+GET    /api/students/{id}/report-card
+POST   /api/students/bulk-import
+GET    /api/students/export
+```
+
+### **4. Teacher Management APIs**
+```
+GET    /api/teachers
+GET    /api/teachers/{id}
+POST   /api/teachers
+PUT    /api/teachers/{id}
+DELETE /api/teachers/{id}
+GET    /api/teachers/by-subject/{subjectId}
+GET    /api/teachers/search
+GET    /api/teachers/{id}/classes
+GET    /api/teachers/{id}/subjects
+GET    /api/teachers/{id}/timetable
+POST   /api/teachers/bulk-import
+GET    /api/teachers/export
+```
+
+### **5. Class Management APIs**
+```
+GET    /api/classes
+GET    /api/classes/{id}
+POST   /api/classes
+PUT    /api/classes/{id}
+DELETE /api/classes/{id}
+GET    /api/classes/by-academic-year/{yearId}
+GET    /api/classes/search
+GET    /api/classes/{id}/students
+GET    /api/classes/{id}/subjects
+GET    /api/classes/{id}/timetable
+GET    /api/classes/{id}/attendance
+POST   /api/classes/{id}/attendance
+GET    /api/classes/{id}/performance-report
+```
+
+### **6. Subject Management APIs**
+```
+GET    /api/subjects
+GET    /api/subjects/{id}
+POST   /api/subjects
+PUT    /api/subjects/{id}
+DELETE /api/subjects/{id}
+GET    /api/subjects/by-category/{category}
+GET    /api/subjects/search
+GET    /api/subjects/{id}/teachers
+GET    /api/subjects/{id}/classes
+```
+
+### **7. Assessment & Marks APIs**
+```
+GET    /api/assessments
+GET    /api/assessments/{id}
+POST   /api/assessments
+PUT    /api/assessments/{id}
+DELETE /api/assessments/{id}
+GET    /api/assessments/by-subject/{subjectId}
+GET    /api/assessments/by-class/{classId}
+GET    /api/assessments/by-term/{termId}
+POST   /api/assessments/{id}/marks
+PUT    /api/assessments/{id}/marks
+GET    /api/assessments/{id}/marks
+POST   /api/assessments/bulk-marks-upload
+GET    /api/assessments/export-marks
+```
+
+### **8. Attendance Management APIs**
+```
+GET    /api/attendance
+GET    /api/attendance/{id}
+POST   /api/attendance
+PUT    /api/attendance/{id}
+DELETE /api/attendance/{id}
+GET    /api/attendance/by-class/{classId}
+GET    /api/attendance/by-date/{date}
+GET    /api/attendance/by-student/{studentId}
+GET    /api/attendance/by-subject/{subjectId}
+POST   /api/attendance/bulk-mark
+GET    /api/attendance/report
+GET    /api/attendance/export
+```
+
+### **9. Timetable Management APIs**
+```
+GET    /api/timetable
+GET    /api/timetable/{id}
+POST   /api/timetable
+PUT    /api/timetable/{id}
+DELETE /api/timetable/{id}
+GET    /api/timetable/by-class/{classId}
+GET    /api/timetable/by-teacher/{teacherId}
+GET    /api/timetable/by-subject/{subjectId}
+GET    /api/timetable/by-day/{dayOfWeek}
+POST   /api/timetable/generate
+POST   /api/timetable/validate
+GET    /api/timetable/conflicts
+```
+
+### **10. Report & Analytics APIs**
+```
+GET    /api/reports/student/{studentId}
+GET    /api/reports/class/{classId}
+GET    /api/reports/subject/{subjectId}
+GET    /api/reports/academic-year/{yearId}
+GET    /api/reports/performance-summary
+GET    /api/reports/attendance-summary
+GET    /api/reports/class-rankings
+GET    /api/reports/subject-performance
+POST   /api/reports/generate
+GET    /api/reports/export
+```
+
+### **11. Communication APIs**
+```
+GET    /api/messages
+GET    /api/messages/{id}
+POST   /api/messages
+PUT    /api/messages/{id}
+DELETE /api/messages/{id}
+GET    /api/messages/inbox
+GET    /api/messages/sent
+GET    /api/messages/unread
+PUT    /api/messages/{id}/read
+POST   /api/messages/bulk-send
+```
+
+### **12. Notification APIs**
+```
+GET    /api/notifications
+GET    /api/notifications/{id}
+POST   /api/notifications
+PUT    /api/notifications/{id}
+DELETE /api/notifications/{id}
+GET    /api/notifications/unread
+PUT    /api/notifications/{id}/read
+PUT    /api/notifications/mark-all-read
+POST   /api/notifications/bulk-send
+```
+
+### **13. Parent/Guardian APIs**
+```
+GET    /api/parents
+GET    /api/parents/{id}
+POST   /api/parents
+PUT    /api/parents/{id}
+DELETE /api/parents/{id}
+GET    /api/parents/by-student/{studentId}
+GET    /api/parents/search
+GET    /api/parents/{id}/students
+POST   /api/parents/bulk-import
+```
+
+### **14. Academic Year & Term APIs**
+```
+GET    /api/academic-years
+GET    /api/academic-years/{id}
+POST   /api/academic-years
+PUT    /api/academic-years/{id}
+DELETE /api/academic-years/{id}
+GET    /api/academic-years/current
+PUT    /api/academic-years/{id}/activate
+GET    /api/terms
+GET    /api/terms/{id}
+POST   /api/terms
+PUT    /api/terms/{id}
+DELETE /api/terms/{id}
+GET    /api/terms/by-academic-year/{yearId}
+```
+
+### **15. System Configuration APIs**
+```
+GET    /api/settings
+GET    /api/settings/{key}
+PUT    /api/settings/{key}
+GET    /api/settings/by-category/{category}
+POST   /api/settings/bulk-update
+GET    /api/audit-logs
+GET    /api/audit-logs/by-user/{userId}
+GET    /api/audit-logs/by-entity/{entityType}/{entityId}
+GET    /api/audit-logs/export
+```
+
+## **Implementation Requirements**
+
+### **1. Project Structure**
+```
+src/main/java/com/rca/mis/
+├── config/           # Configuration classes
+├── controller/       # REST controllers
+├── service/          # Business logic services
+├── repository/       # Data access layer
+├── model/           # Entity models
+├── dto/             # Data transfer objects
+├── exception/       # Custom exceptions
+├── security/        # Security configuration
+├── util/            # Utility classes
+└── validation/      # Custom validators
+```
+
+### **2. Security Implementation**
+- JWT-based authentication
+- Role-based access control (RBAC)
+- Password encryption with BCrypt
+- API rate limiting
+- CORS configuration
+- Input validation and sanitization
+- SQL injection prevention
+- XSS protection
+
+### **3. Data Validation**
+- Bean validation annotations
+- Custom validation rules
+- Input sanitization
+- Business rule validation
+- Data integrity checks
+
+### **4. Error Handling**
+- Global exception handler
+- Custom exception classes
+- Proper HTTP status codes
+- Detailed error messages
+- Logging of all errors
+- User-friendly error responses
+
+### **5. Performance Optimization**
+- Database indexing strategy
+- Query optimization
+- Pagination for large datasets
+- Caching strategy (Redis recommended)
+- Lazy loading for relationships
+- Batch operations for bulk data
+
+### **6. Testing Requirements**
+- Unit tests for all services
+- Integration tests for repositories
+- API endpoint testing
+- Security testing
+- Performance testing
+- Test coverage > 80%
+
+### **7. Documentation**
+- OpenAPI 3.0 specification
+- README with setup instructions
+- API documentation
+- Database schema documentation
+- Deployment guide
+
+### **8. Additional Features**
+- File upload/download for documents
+- Email notification system
+- SMS integration (optional)
+- PDF generation for reports
+- Excel import/export functionality
+- Real-time notifications (WebSocket)
+- Backup and restore functionality
+- System monitoring and health checks
+
+## **Database Migration & Seeding**
+- Use Flyway or Liquibase for database versioning
+- Create initial data seeding scripts
+- Include sample data for testing
+- Proper rollback scripts
+
+## **Deployment & DevOps**
+- Docker containerization
+- Environment-specific configurations
+- Health check endpoints
+- Logging configuration
+- Monitoring and alerting setup
+
+## **Expected Deliverables**
+1. Complete Spring Boot application
+2. PostgreSQL database schema
+3. Comprehensive API documentation
+4. Unit and integration tests
+5. Docker configuration
+6. Deployment instructions
+7. Sample data and test cases
+
+## **Quality Standards**
+- Follow Spring Boot best practices
+- Implement proper logging and monitoring
+- Use meaningful variable and method names
+- Include comprehensive error handling
+- Implement proper security measures
+- Follow REST API design principles
+- Include proper API versioning
+- Implement request/response logging
+- Use proper HTTP status codes
+- Include pagination for list endpoints
+
+This backend system should be production-ready, scalable, and maintainable. Focus on creating a robust foundation that can handle the complexity of a school management system while maintaining good performance and security standards.
+
+---
+
+**Please implement this system step by step, starting with the core entities and basic CRUD operations, then moving to more complex business logic and advanced features. Ensure each component is properly tested before moving to the next.**

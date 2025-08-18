@@ -104,11 +104,11 @@ const Admin = () => {
         <div 
           onClick={(e) => {
             // Add click feedback
-            e.target.style.transform = 'scale(0.98)';
+            e.currentTarget.style.transform = 'scale(0.98)';
             setTimeout(() => {
-              e.target.style.transform = 'translateY(-3px) scale(1.02)';
-              e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.3)';
-              e.target.querySelector('[data-hover-icon]').style.opacity = '0.6';
+              e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.3)';
+              e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.6';
             }, 100);
             setCurrentPage('students');
           }}
@@ -124,14 +124,14 @@ const Admin = () => {
             overflow: 'hidden'
           }}
           onMouseEnter={(e) => {
-            e.target.style.transform = 'translateY(-3px) scale(1.02)';
-            e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.3)';
-            e.target.querySelector('[data-hover-icon]').style.opacity = '0.6';
+            e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.3)';
+            e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.6';
           }}
           onMouseLeave={(e) => {
-            e.target.style.transform = 'translateY(0) scale(1)';
-            e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            e.target.querySelector('[data-hover-icon]').style.opacity = '0.3';
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.3';
           }}
         >
           <h3 style={{ margin: '0 0 10px 0', fontSize: '18px' }}>Total Students</h3>
@@ -158,11 +158,11 @@ const Admin = () => {
         <div 
           onClick={(e) => {
             // Add click feedback
-            e.target.style.transform = 'scale(0.98)';
+            e.currentTarget.style.transform = 'scale(0.98)';
             setTimeout(() => {
-              e.target.style.transform = 'translateY(-3px) scale(1.02)';
-              e.target.style.boxShadow = '0 8px 25px rgba(240, 147, 251, 0.3)';
-              e.target.querySelector('[data-hover-icon]').style.opacity = '0.6';
+              e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(240, 147, 251, 0.3)';
+              e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.6';
             }, 100);
             setCurrentPage('teachers');
           }}
@@ -178,14 +178,14 @@ const Admin = () => {
             overflow: 'hidden'
           }}
           onMouseEnter={(e) => {
-            e.target.style.transform = 'translateY(-3px) scale(1.02)';
-            e.target.style.boxShadow = '0 8px 25px rgba(240, 147, 251, 0.3)';
-            e.target.querySelector('[data-hover-icon]').style.opacity = '0.6';
+            e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 8px 25px rgba(240, 147, 251, 0.3)';
+            e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.6';
           }}
           onMouseLeave={(e) => {
-            e.target.style.transform = 'translateY(0) scale(1)';
-            e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            e.target.querySelector('[data-hover-icon]').style.opacity = '0.3';
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.3';
           }}
         >
           <h3 style={{ margin: '0 0 10px 0', fontSize: '18px' }}>Total Teachers</h3>
@@ -212,11 +212,11 @@ const Admin = () => {
         <div 
           onClick={(e) => {
             // Add click feedback
-            e.target.style.transform = 'scale(0.98)';
+            e.currentTarget.style.transform = 'scale(0.98)';
             setTimeout(() => {
-              e.target.style.transform = 'translateY(-3px) scale(1.02)';
-              e.target.style.boxShadow = '0 8px 25px rgba(79, 172, 254, 0.3)';
-              e.target.querySelector('[data-hover-icon]').style.opacity = '0.6';
+              e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(79, 172, 254, 0.3)';
+              e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.6';
             }, 100);
             setCurrentPage('classes');
           }}
@@ -232,14 +232,14 @@ const Admin = () => {
             overflow: 'hidden'
           }}
           onMouseEnter={(e) => {
-            e.target.style.transform = 'translateY(-3px) scale(1.02)';
-            e.target.style.boxShadow = '0 8px 25px rgba(79, 172, 254, 0.3)';
-            e.target.querySelector('[data-hover-icon]').style.opacity = '0.6';
+            e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 8px 25px rgba(79, 172, 254, 0.3)';
+            e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.6';
           }}
           onMouseLeave={(e) => {
-            e.target.style.transform = 'translateY(0) scale(1)';
-            e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            e.target.querySelector('[data-hover-icon]').style.opacity = '0.3';
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.3';
           }}
         >
           <h3 style={{ margin: '0 0 10px 0', fontSize: '18px' }}>Total Classes</h3>
@@ -266,11 +266,11 @@ const Admin = () => {
         <div 
           onClick={(e) => {
             // Add click feedback
-            e.target.style.transform = 'scale(0.98)';
+            e.currentTarget.style.transform = 'scale(0.98)';
             setTimeout(() => {
-              e.target.style.transform = 'translateY(-3px) scale(1.02)';
-              e.target.style.boxShadow = '0 8px 25px rgba(67, 233, 123, 0.3)';
-              e.target.querySelector('[data-hover-icon]').style.opacity = '0.6';
+              e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(67, 233, 123, 0.3)';
+              e.currentTarget.querySelector('[data-hover-icon]').style.opacity = '0.6';
             }, 100);
             setCurrentPage('subjects');
           }}

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { authApi } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -14,50 +15,105 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Static user data with more detailed information
-  const staticUsers = {
-    'student@gmail.com': { 
-      password: 'student123', 
-      role: 'student',
-      id: 'S001',
-      name: 'John Doe',
-      email: 'student@gmail.com',
-      class: 'Year 2A',
-      studentCode: 'RCA0302RYZ'
+  // Demo accounts fallback (for when backend is unavailable)
+  const demoAccounts = {
+    'student@gmail.com': {
+      password: 'student123',
+      roles: ['ROLE_STUDENT'],
+      user: { id: 'stu-1', email: 'student@gmail.com', fullName: 'Demo Student' }
     },
-    'teacher@gmail.com': { 
-      password: 'teacher123', 
-      role: 'teacher',
-      id: 'T001',
-      name: 'Dr. Sarah Mukamana',
-      email: 'teacher@gmail.com',
-      subject: 'Mathematics',
-      subjectCode: 'MATH'
+    'teacher@gmail.com': {
+      password: 'teacher123',
+      roles: ['ROLE_TEACHER'],
+      user: { id: 'tch-1', email: 'teacher@gmail.com', fullName: 'Demo Teacher' }
     },
-    'admin@gmail.com': { 
-      password: 'admin123', 
-      role: 'admin',
-      id: 'A001',
-      name: 'Admin User',
-      email: 'admin@gmail.com'
+    'admin@gmail.com': {
+      password: 'admin123',
+      roles: ['ROLE_ADMIN'],
+      user: { id: 'adm-1', email: 'admin@gmail.com', fullName: 'Demo Admin' }
     }
+  };
+
+  const buildDemoAuthResponse = (email) => {
+    const entry = demoAccounts[email];
+    return {
+      accessToken: 'demo-access-token',
+      refreshToken: 'demo-refresh-token',
+      expiresIn: 3600,
+      roles: entry.roles,
+      permissions: [],
+      user: entry.user
+    };
+  };
+
+  const normalizeRole = (roles) => {
+    const roleSet = new Set((roles || []).map(r => r?.toUpperCase?.() || r));
+    if (roleSet.has('SUPER_ADMIN') || roleSet.has('ADMIN') || roleSet.has('ROLE_ADMIN')) return 'admin';
+    if (roleSet.has('TEACHER') || roleSet.has('ROLE_TEACHER')) return 'teacher';
+    if (roleSet.has('STUDENT') || roleSet.has('ROLE_STUDENT')) return 'student';
+    return 'student';
+  };
+
+  const buildCurrentUser = (resp) => {
+    const role = normalizeRole(resp.roles);
+    const name = resp.user?.fullName || [resp.user?.firstName, resp.user?.lastName].filter(Boolean).join(' ') || resp.user?.email;
+    return {
+      id: resp.user?.id,
+      name,
+      email: resp.user?.email,
+      role,
+      // Optional fields used in some views; may be undefined until implemented in backend
+      class: null,
+      studentCode: null
+    };
   };
 
   // Login function
-  const login = (email, password) => {
-    const user = staticUsers[email];
-    if (user && user.password === password) {
+  const login = async (email, password, rememberMe = false) => {
+    try {
+      const resp = await authApi.login(email, password, rememberMe);
+      const authPayload = {
+        accessToken: resp.accessToken,
+        refreshToken: resp.refreshToken,
+        expiresIn: resp.expiresIn,
+        roles: resp.roles,
+        permissions: resp.permissions,
+        user: resp.user
+      };
+      localStorage.setItem('auth', JSON.stringify(authPayload));
+      const user = buildCurrentUser(resp);
       setCurrentUser(user);
       localStorage.setItem('currentUser', JSON.stringify(user));
       return { success: true, user };
+    } catch (e) {
+      // Fallback to demo accounts if credentials match
+      const demo = demoAccounts[email];
+      if (demo && demo.password === password) {
+        const resp = buildDemoAuthResponse(email);
+        const authPayload = {
+          accessToken: resp.accessToken,
+          refreshToken: resp.refreshToken,
+          expiresIn: resp.expiresIn,
+          roles: resp.roles,
+          permissions: resp.permissions,
+          user: resp.user
+        };
+        localStorage.setItem('auth', JSON.stringify(authPayload));
+        const user = buildCurrentUser(resp);
+        setCurrentUser(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return { success: true, user, demo: true };
+      }
+      return { success: false, error: e.message || 'Login failed' };
     }
-    return { success: false, error: 'Invalid credentials' };
   };
 
   // Logout function
-  const logout = () => {
+  const logout = async () => {
+    try { await authApi.logout(); } catch (e) { /* ignore */ }
     setCurrentUser(null);
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('auth');
   };
 
   // Check if user has permission for specific actions
@@ -119,13 +175,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Initialize user from localStorage on app start
+  // Initialize user from localStorage on app start and validate token
   useEffect(() => {
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
+    const init = async () => {
+      try {
+        const savedUser = localStorage.getItem('currentUser');
+        const savedAuth = localStorage.getItem('auth');
+        if (savedUser && savedAuth) {
+          setCurrentUser(JSON.parse(savedUser));
+          // validate in background
+          try {
+            const isValid = await authApi.validateToken();
+            if (!isValid) {
+              await logout();
+            }
+          } catch (_) {
+            // best-effort
+          }
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
   }, []);
 
   const value = {
