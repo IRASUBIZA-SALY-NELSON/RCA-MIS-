@@ -1,6 +1,6 @@
 // Minimal fetch-based API client for MIS
-// Use same-origin '/api' by default so requests go to /api/... (works in prod and with Vite proxy in dev)
-const API_BASE_URL = import.meta?.env?.VITE_API_URL || '/api';
+// Use deployed backend URL for production
+const API_BASE_URL = import.meta?.env?.VITE_API_URL || 'https://mis-backend-server-development.onrender.com/api';
 
 const readAuth = () => {
 	try {
@@ -100,6 +100,8 @@ const request = async (path, { method = 'GET', headers = {}, body, isForm = fals
 export const authApi = {
 	login: (email, password, rememberMe = false) =>
 		request('/auth/login', { method: 'POST', body: { email, password, rememberMe } }),
+	register: (userData) =>
+		request('/auth/register', { method: 'POST', body: userData }),
 	refresh: (refreshToken) =>
 		request(`/auth/refresh-token?refreshToken=${encodeURIComponent(refreshToken)}`, { method: 'POST' }),
 	logout: () => request('/auth/logout', { method: 'POST', headers: getAuthHeader() }),
@@ -110,9 +112,20 @@ export const authApi = {
 	verifyOtp: (email, otp) => request(`/auth/verify-otp?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, { method: 'POST' }),
 	resetPassword: (resetToken, newPassword) =>
 		request(`/auth/reset-password?resetToken=${encodeURIComponent(resetToken)}&newPassword=${encodeURIComponent(newPassword)}`, { method: 'POST' }),
+	getProfile: () => request('/auth/profile', { method: 'GET' }),
+	updateProfile: (profileData) => request('/auth/profile', { method: 'PUT', body: profileData }),
 };
 
-export const api = { request, auth: authApi };
+export const userApi = {
+	getProfile: (userId) => request(`/users/${userId}`, { method: 'GET' }),
+	updateProfile: (userId, profileData) => request(`/users/${userId}`, { method: 'PUT', body: profileData }),
+	getUsersByRole: (role) => request(`/users?role=${role}`, { method: 'GET' }),
+	getAllUsers: () => request('/users', { method: 'GET' }),
+	createUser: (userData) => request('/users', { method: 'POST', body: userData }),
+	deleteUser: (userId) => request(`/users/${userId}`, { method: 'DELETE' }),
+};
+
+export const api = { request, auth: authApi, users: userApi };
 
 export default api;
 

@@ -47,7 +47,9 @@ const Login = () => {
       
       if (result.success) {
         const role = result.user.role;
-        showToast(`Login successful! Welcome ${role}`, 'success');
+        const userName = result.user.name || result.user.fullName || 'User';
+        
+        showToast(`Login successful! Welcome back ${userName}`, 'success');
         
         // Navigate based on role after a short delay to show success toast
         setTimeout(() => {
@@ -61,14 +63,21 @@ const Login = () => {
             case 'admin':
               navigate('/admin');
               break;
+            case 'accountant':
+              navigate('/accountant');
+              break;
+            case 'discipline':
+              navigate('/discipline');
+              break;
             default:
               navigate('/student');
           }
         }, 1500);
       } else {
-        showToast(result.error || 'Invalid credentials. Please try again.', 'error');
+        showToast(result.error || 'Invalid credentials. Please check your email and password.', 'error');
       }
     } catch (error) {
+      console.error('Login error:', error);
       showToast('An unexpected error occurred. Please try again.', 'error');
     } finally {
       setIsLoading(false);
@@ -76,7 +85,7 @@ const Login = () => {
   };
 
   const handleForgotPassword = () => {
-    showToast('Password reset link sent to your email (demo)', 'info');
+    navigate('/forgot-password');
   };
 
   const handleKeyPress = (e) => {
@@ -198,37 +207,24 @@ const Login = () => {
             </button>
 
             {/* Forgot Password Link */}
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            {/* Registration and Forgot Password Links */}
+            <div className="flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0 mt-6">
+              <button
+                type="button"
+                onClick={() => navigate('/register')}
+                className="text-green-600 hover:text-green-800 font-medium text-sm sm:text-base transition-colors duration-200"
+                disabled={isLoading}
+              >
+                Create New Account
+              </button>
               <button
                 type="button"
                 onClick={() => navigate('/forgot-password')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#667eea',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  textDecoration: 'underline',
-                  padding: '0'
-                }}
+                className="text-blue-600 hover:text-blue-800 font-medium text-sm sm:text-base transition-colors duration-200"
+                disabled={isLoading}
               >
-                Forgot your password?
+                Forgot Password?
               </button>
-            </div>
-
-            <div style={{ marginTop: '30px', textAlign: 'center' }}>
-              <p style={{ color: '#666', marginBottom: '10px' }}>Demo Accounts:</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
-                <div style={{ background: '#f8f9fa', padding: '8px', borderRadius: '6px' }}>
-                  <strong>Student:</strong> student@gmail.com / student123
-                </div>
-                <div style={{ background: '#f8f9fa', padding: '8px', borderRadius: '6px' }}>
-                  <strong>Teacher:</strong> teacher@gmail.com / teacher123
-                </div>
-                <div style={{ background: '#f8f9fa', padding: '8px', borderRadius: '6px' }}>
-                  <strong>Admin:</strong> admin@gmail.com / admin123
-                </div>
-              </div>
             </div>
           </div>
         </div>
