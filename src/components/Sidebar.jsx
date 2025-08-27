@@ -127,6 +127,24 @@ const Sidebar = ({ currentPage, onPageChange, isOpen, onToggle, userRole = 'stud
         { id: 'settings', label: 'Settings', icon: '⚙️' },
         { id: 'profile', label: 'Profile', icon: '👤' }
       ];
+    } else if (userRole === 'accountant') {
+      return [
+        { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+        { id: 'payments', label: 'Payment Records', icon: '💳' },
+        { id: 'debts', label: 'Outstanding Debts', icon: '💰' },
+        { id: 'reports', label: 'Financial Reports', icon: '📈' },
+        { id: 'students', label: 'Student Records', icon: '👥' },
+        { id: 'settings', label: 'Settings', icon: '⚙️' },
+        { id: 'profile', label: 'Profile', icon: '👤' }
+      ];
+    } else if (userRole === 'discipline') {
+      return [
+        { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+        { id: 'conduct', label: 'Conduct Records', icon: '📋' },
+        { id: 'incidents', label: 'Incident Management', icon: '⚠️' },
+        { id: 'settings', label: 'Settings', icon: '⚙️' },
+        { id: 'profile', label: 'Profile', icon: '👤' }
+      ];
     } else {
       return [
         { id: 'dashboard', label: 'Dashboard', icon: '📊' },
