@@ -44,7 +44,7 @@ const Student = () => {
 
     // User is authorized
     setIsAuthorized(true);
-    console.log('✅ Student access authorized:', {
+    console.log('✅ parent access authorized:', {
       userId: currentUser.id,
       userName: currentUser.name,
       timestamp: new Date().toISOString()
